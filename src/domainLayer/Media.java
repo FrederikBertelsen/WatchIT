@@ -1,7 +1,9 @@
 package domainLayer;
 
-public class Media {
+import java.util.ArrayList;
+
+public abstract class Media {
     private String title;
     private int rating;
-    private String[] categories;
+    private ArrayList<String> categories;
 }
