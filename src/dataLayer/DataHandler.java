@@ -1,11 +1,16 @@
 package dataLayer;
 
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public interface DataHandler {
 
-    List<String> load();
+    BufferedImage getImage(String mediaName)throws IOException;
 
-    void saveFavourite(String name);
+    ArrayList<String> load()throws IOException;
+
+    void saveFavourite(String data);
 }
