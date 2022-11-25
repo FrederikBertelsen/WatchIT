@@ -1,4 +1,4 @@
-package domainLayer;
+package domainLayer.dataStructure;
 
 
 public interface Playable {
