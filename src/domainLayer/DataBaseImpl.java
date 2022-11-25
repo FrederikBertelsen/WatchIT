@@ -16,7 +16,7 @@ public class DataBaseImpl implements DataBase{
             String title = parts[0];
             int year = Integer.parseInt(parts[1]);
 
-            parts[3].replace(",", ".");
+            parts[3] = parts[3].replace(",", ".");
             double rating = Double.parseDouble(parts[3]);
 
 
@@ -40,7 +40,7 @@ public class DataBaseImpl implements DataBase{
             int toYear = Integer.parseInt(years[1]);
 
 
-            parts[3].replace(",", ".");
+            parts[3] = parts[3].replace(",", ".");
             double rating = Double.parseDouble(parts[3]);
 
             ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ?"))) ;
