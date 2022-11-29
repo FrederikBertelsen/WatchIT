@@ -17,19 +17,28 @@ public class DataBaseImpl implements DataBase {
     private ArrayList<Show> shows;
 
     private DataHandler movieDataHandler;
-    private DataHandler showDataHandler;
     private String moviePath = "data/film.txt";
     private String movieImageFolderPath = "data/filmplakater";
+
+    private DataHandler showDataHandler;
     private String showPath = "data/serier.txt";
     private String showImageFolderPath = "data/serierforsider";
 
     public DataBaseImpl(){
         movieDataHandler = new DataHandlerImpl(moviePath, movieImageFolderPath);
         showDataHandler = new DataHandlerImpl(showPath, showImageFolderPath);
+
+        try {
+            movieLoader(movieDataHandler.load());
+            showLoader(showDataHandler.load());
+        } catch (IOException e){
+            System.out.println("Error in loading movie and show data: " + e.getMessage());
+        }
+
     }
 
     @Override
-    public void movieSplitter(ArrayList<String> moviesStrings) throws IOException {
+    public void movieLoader(ArrayList<String> moviesStrings) throws IOException {
         movies = new ArrayList<>();
 
         for (String string : moviesStrings) {
@@ -37,23 +46,29 @@ public class DataBaseImpl implements DataBase {
             String[] parts = string.split("; ?");
 
             String title = parts[0];
+
             int year = Integer.parseInt(parts[1]);
+
+            ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ")));
 
             parts[3] = parts[3].replace(",", ".");
             double rating = Double.parseDouble(parts[3]);
 
-            ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ")));
-
             BufferedImage image = movieDataHandler.getImage(title);
+            if (image == null){
+                System.out.println(title);
+            }
+
             Movie movie = new Movie(title, year, genres, rating, image);
             movies.add(movie);
         }
     }
 
     @Override
-    public void showSplitter(ArrayList<String> shows) throws IOException {
+    public void showLoader(ArrayList<String> showStrings) throws IOException {
         shows = new ArrayList<>();
-        for (String string : shows) {
+
+        for (String string : showStrings) {
 
             String[] parts = string.split("; ?");
             String title = parts[0];
@@ -78,16 +93,14 @@ public class DataBaseImpl implements DataBase {
                     Episode newEpisode = new Episode(i);
                     episodes.add(newEpisode);
                 }
-
                 Season newSeason = new Season(seasonNumber, episodes);
                 seasons.add(newSeason);
-
             }
 
             BufferedImage image = showDataHandler.getImage(title);
 
             Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image);
-            this.shows.add(show);
+            shows.add(show);
         }
 
     }

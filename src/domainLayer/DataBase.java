@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface DataBase {
-    public void movieSplitter(ArrayList<String> movieStrings) throws IOException;
-    public void showSplitter(ArrayList<String> showStrings) throws IOException;
+    void movieLoader(ArrayList<String> movieStrings) throws IOException;
+    void showLoader(ArrayList<String> showStrings) throws IOException;
+
+    ArrayList<Movie> getMovies();
+
+    ArrayList<Show> getShows();
 }
