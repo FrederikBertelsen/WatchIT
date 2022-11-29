@@ -7,14 +7,31 @@ import domainLayer.dataStructure.Movie;
 import domainLayer.dataStructure.Season;
 import domainLayer.dataStructure.Show;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DataBaseImpl implements DataBase {
+    private ArrayList<Movie> movies;
+    private ArrayList<Show> shows;
+
+    private DataHandler movieDataHandler;
+    private DataHandler showDataHandler;
+    private String moviePath = "data/film.txt";
+    private String movieImageFolderPath = "data/filmplakater";
+    private String showPath = "data/serier.txt";
+    private String showImageFolderPath = "data/serierforsider";
+
+    public DataBaseImpl(){
+        movieDataHandler = new DataHandlerImpl(moviePath, movieImageFolderPath);
+        showDataHandler = new DataHandlerImpl(showPath, showImageFolderPath);
+    }
+
     @Override
-    public ArrayList<Movie> movieSplitter(ArrayList<String> moviesStrings) {
-        ArrayList<Movie> movieList = new ArrayList<>();
+    public void movieSplitter(ArrayList<String> moviesStrings) throws IOException {
+        movies = new ArrayList<>();
+
         for (String string : moviesStrings) {
 
             String[] parts = string.split("; ?");
@@ -25,18 +42,17 @@ public class DataBaseImpl implements DataBase {
             parts[3] = parts[3].replace(",", ".");
             double rating = Double.parseDouble(parts[3]);
 
-
             ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ")));
 
-            Movie movie = new Movie(title, year, genres, rating);
-            movieList.add(movie);
+            BufferedImage image = movieDataHandler.getImage(title);
+            Movie movie = new Movie(title, year, genres, rating, image);
+            movies.add(movie);
         }
-        return movieList;
     }
 
     @Override
-    public ArrayList<Show> showSplitter(ArrayList<String> shows) {
-        ArrayList<Show> showList = new ArrayList<>();
+    public void showSplitter(ArrayList<String> shows) throws IOException {
+        shows = new ArrayList<>();
         for (String string : shows) {
 
             String[] parts = string.split("; ?");
@@ -65,14 +81,23 @@ public class DataBaseImpl implements DataBase {
 
                 Season newSeason = new Season(seasonNumber, episodes);
                 seasons.add(newSeason);
+
             }
 
+            BufferedImage image = showDataHandler.getImage(title);
 
-            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons);
-            showList.add(show);
+            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image);
+            this.shows.add(show);
         }
-        return showList;
+
     }
 
+    public ArrayList<Movie> getMovies(){
+        return movies;
+    }
+
+    public ArrayList<Show> getShows(){
+        return shows;
+    }
 
 }
