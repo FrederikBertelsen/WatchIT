@@ -78,7 +78,7 @@ public class favoritesDataTest {
     }
 
     @Test
-    public void saveFavoriteRemove(){
+    public void saveFavoriteRemoveTest(){
 
         try {
             dataHandler.addFavorite("Twin peaks");
