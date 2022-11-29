@@ -1,8 +1,8 @@
 package dataLayer;
 
-import java.util.ArrayList;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public interface DataHandler {
 
@@ -10,5 +10,5 @@ public interface DataHandler {
 
     ArrayList<String> load()throws IOException;
 
-    void saveFavourite(String data);
+    void saveFavourite(String data) throws IOException;
 }
