@@ -8,6 +8,7 @@ import domainLayer.dataStructure.Season;
 import domainLayer.dataStructure.Show;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class DataBaseImpl implements DataBase {
 
     private DataHandler showDataHandler;
     private String showPath = "data/serier.txt";
-    private String showImageFolderPath = "data/serierforsider";
+    private String showImageFolderPath = "data/serieforsider";
 
     public DataBaseImpl(){
         movieDataHandler = new DataHandlerImpl(moviePath, movieImageFolderPath);
@@ -31,8 +32,11 @@ public class DataBaseImpl implements DataBase {
         try {
             movieLoader(movieDataHandler.load());
             showLoader(showDataHandler.load());
-        } catch (IOException e){
-            System.out.println("Error in loading movie and show data: " + e.getMessage());
+        }catch (FileNotFoundException e){
+            System.out.println("Error in loading movie and show files: " + e.getMessage());
+        }
+        catch (IOException e){
+            System.out.println("Error in loading movie and show images: " + e.getMessage());
         }
 
     }
