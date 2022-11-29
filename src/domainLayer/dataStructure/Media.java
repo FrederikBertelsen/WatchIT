@@ -1,8 +1,10 @@
 package domainLayer.dataStructure;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public abstract class Media {
+    private BufferedImage image;
     private String title;
     private ArrayList<String> genres;
     private double rating;
@@ -10,7 +12,7 @@ public abstract class Media {
     private int releaseYear;
 
 
-    public Media(String title, int releaseYear, ArrayList<String> genres, double rating){
+    public Media(String title, int releaseYear, ArrayList<String> genres, double rating, BufferedImage image){
         this.title = title;
         this.genres = genres;
         this.rating = rating;
@@ -32,5 +34,9 @@ public abstract class Media {
 
     public int getReleaseYear() {
         return releaseYear;
+    }
+
+    public BufferedImage getImage() {
+        return image;
     }
 }
