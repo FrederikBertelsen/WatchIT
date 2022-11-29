@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 
@@ -25,7 +24,7 @@ public class mediaDataTest {
     ArrayList<String> data;
     String filePath;
     @BeforeEach
-    public void setUp()throws Exception{
+    public void setUp(){
         filePath = "data/serier.txt";
         dataHandler = new DataHandlerImpl(filePath, "data/serieforsider");
     }
@@ -46,13 +45,12 @@ public class mediaDataTest {
         for(int i=0; i<100; i++) {
             try {
                 BufferedImage img = dataHandler.getImage(((data.get(i)).split(";"))[0]);
-                showLoadedImage(img);
+                //showLoadedImage(img);
             } catch(IOException e){
                 System.out.println("Cannot find image nr." + i + "with name" + data.get(i).split(";")[0]);
             }
 
         }
-        assertTrue(true);
     }
 
 

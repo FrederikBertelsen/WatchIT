@@ -18,4 +18,7 @@ public interface DataHandler {
     void addFavorite(String data) throws FavoriteAddRemoveException,IOException;
 
     void removeFavorite(String data) throws FavoriteAddRemoveException, IOException;
+
+    //denne skal kun køres på videoer ekneltvis efter brugeren har bedt den blive afspillet
+    //denne skal ikke være void
 }
