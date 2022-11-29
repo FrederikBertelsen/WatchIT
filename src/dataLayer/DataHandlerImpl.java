@@ -46,7 +46,7 @@ public class DataHandlerImpl implements DataHandler {
     }
 
     //jeg har virkelig lyst til at hardcode den her fordi den kunne meget let slette alle vores filmdata
-    public void saveFavourite(String data) throws IOException{
+    public void removeFavorite(String data) throws FavoriteAddRemoveException,IOException{
         //her laver vi den fil som bliver til den nye "favorites.txt" fil
         File newFile = new File("./tempFile.txt");
         //for at sørge for at vi ikke skriver til en existerende fil fjerner vi filer ved navn "tempFile.txt" før vi forsøger at skabe den
@@ -55,27 +55,49 @@ public class DataHandlerImpl implements DataHandler {
         //initialiserer vores writer for at kunne skrive til filen
         PrintWriter pw = new PrintWriter(newFile);
         boolean exists = false;
-        //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen skriver vi det ikke til ny fil og vi noterer at det var der
+        //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen noterer vi at det var der ellers tilføjes det til den nye fil
         try{
             for (String s:load()){
-                if(data.equals(s)){
+                if(data.equals(s)) {
                     exists = true;
                 }
-                else{
+                else {
                     pw.println(s);
                 }
             }
         } catch (FileNotFoundException e){
 
         }
-        //hvis ikke vi har set mediet endnu skrives det til filen
-        if(!exists){
-            pw.println(data);
+        finally {
+            //vi lukker vores pw inden vi kaster en exception
+            pw.close();
         }
-        pw.close();
+
+        //hvis ikke vi har set mediet kaster vi en exception
+        if(!exists){
+            throw new FavoriteAddRemoveException("does not exist", data);
+        }
+        //instancierer den gamle fil
         File favorites = new File(filePath);
-        //replaces the old file with the new
+        //erstatter den gamle fil med den nye
         favorites.delete();
         newFile.renameTo(favorites);
+    }
+    public void addFavorite(String data) throws FavoriteAddRemoveException, IOException{
+        //her laver vi den fil som bliver til "favorit.txt" filen
+        File favorites = new File(filePath);
+        //hvis der ikke existerer en favorites fil laver vi den
+        if (!favorites.exists()) favorites.createNewFile();
+        //initialiserer vores writer for at kunne skrive til filen
+        PrintWriter pw = new PrintWriter(favorites);
+        //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen kaster vi en exception
+        for (String s:load()){
+            if(data.equals(s)){
+                throw new FavoriteAddRemoveException("exists", data);
+            }
+        }
+        //hvis ikke vi har set mediet endnu skrives det til filen
+        pw.println(data);
+        pw.close();
     }
 }

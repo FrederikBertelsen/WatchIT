@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -27,7 +28,6 @@ public class mediaDataTest {
     public void setUp()throws Exception{
         filePath = "data/serier.txt";
         dataHandler = new DataHandlerImpl(filePath, "data/serieforsider");
-        data = dataHandler.load();
     }
 
     @AfterEach
@@ -37,13 +37,18 @@ public class mediaDataTest {
     }
 
     @Test
-    public  void getImageTest() throws Exception{
+    public  void getImageTest(){
+        try {
+            data = dataHandler.load();
+        }catch (FileNotFoundException e){
+            System.out.println(e.getMessage());
+        }
         for(int i=0; i<100; i++) {
             try {
                 BufferedImage img = dataHandler.getImage(((data.get(i)).split(";"))[0]);
                 showLoadedImage(img);
-            } catch(Exception e){
-                System.out.println(i);
+            } catch(IOException e){
+                System.out.println("Cannot find image nr." + i + "with name" + data.get(i).split(";")[0]);
             }
 
         }
@@ -52,8 +57,14 @@ public class mediaDataTest {
 
 
     @Test
-    public void loadTest() throws Exception{
+    public void loadTest() {
+        try {
+            data = dataHandler.load();
+        } catch (FileNotFoundException e){
+            System.out.println(e.getMessage());
+        }
         assertEquals(data.get(0),"Twin Peaks; 1990-1991; Crime, Drama, Mystery; 8,8; 1-8, 2-22;");
+        assertEquals(data.get(53),"South Park; 1997-; Animation, Comedy; 8,7; 1-13, 2-18, 3-17, 4-17, 5-14, 6-17, 7-15, 8-14, 9-14, 10-14, 11-14, 12-14, 13-14, 14-14, 15-14, 16-14, 17-10, 18-10, 19-10, 20-10, 21-10, 22-10;");
     }
 
     //I have no clue how to test if I get the correct image, but I test that no errors occur
@@ -66,23 +77,5 @@ public class mediaDataTest {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    @Test
-    public void saveFavoriteAddToEmptyTest(){
-
-    }
-
-
-    @Test
-    public void saveFavoriteAddToExistingTest(){
-
-    }
-
-    @Test
-    public void saveFavoriteRemove(){
-        try {
-            dataHandler.saveFavourite("Twin peaks");
-            dataHandler.saveFavourite("Twin peaks");
-        } catch (IOException e){}
-    }
 }
 
