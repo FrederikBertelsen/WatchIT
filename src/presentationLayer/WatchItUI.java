@@ -1,5 +1,8 @@
 package presentationLayer;
 
+import domainLayer.DataBase;
+import domainLayer.DataBaseImpl;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -30,6 +33,9 @@ public class WatchItUI {
 //        layout.setHgap(10);
         Gallery gallery = new Gallery(layout);
         frame.add(BorderLayout.CENTER, new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+
+        DataBase db = new DataBaseImpl();
+        gallery.updatePanels(db.getMovies());
 
 
         frame.setSize(1920 / 2, 1080 / 2);
