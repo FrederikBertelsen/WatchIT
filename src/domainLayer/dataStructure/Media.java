@@ -17,7 +17,7 @@ public abstract class Media {
         this.genres = genres;
         this.rating = rating;
         this.releaseYear = releaseYear;
-
+        this.image = image;
     }
 
     public String getTitle(){
