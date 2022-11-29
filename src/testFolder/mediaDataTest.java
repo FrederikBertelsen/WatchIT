@@ -10,14 +10,16 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class dataTest {
+
+
+public class mediaDataTest {
     DataHandler dataHandler;
     ArrayList<String> data;
     String filePath;
@@ -65,24 +67,6 @@ public class dataTest {
     }
 
     @Test
-    public void emptyFavoriteTest(){
-        File file = new File(filePath);
-        file.delete();
-        dataHandler.saveFavourite("Twin peaks");
-    }
-
-    @Test
-    public void addFavoriteTest(){
-
-    }
-
-    @Test
-    public void removeFavoriteTest() throws Exception{
-        dataHandler.saveFavourite("Twin peaks");
-        dataHandler.saveFavourite("Twin peaks");
-    }
-
-    @Test
     public void saveFavoriteAddToEmptyTest(){
 
     }
@@ -95,8 +79,10 @@ public class dataTest {
 
     @Test
     public void saveFavoriteRemove(){
-        dataHandler.saveFavourite("Twin peaks");
-        dataHandler.saveFavourite("Twin peaks");
+        try {
+            dataHandler.saveFavourite("Twin peaks");
+            dataHandler.saveFavourite("Twin peaks");
+        } catch (IOException e){}
     }
 }
 
