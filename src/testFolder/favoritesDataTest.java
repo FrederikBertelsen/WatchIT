@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,7 +43,6 @@ public class favoritesDataTest {
         file.delete();
         try {
             dataHandler.addFavorite("Rear Window");
-            Scanner s = new Scanner(file);
             data = dataHandler.load();
         } catch (IOException e){
             System.out.println(e.getMessage());
@@ -60,9 +58,7 @@ public class favoritesDataTest {
             correctTestPath = true;
         }
         assertTrue(correctTestPath);
-
     }
-
 
     @Test
     public void saveFavoriteAddToExistingTest() {
@@ -74,7 +70,6 @@ public class favoritesDataTest {
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
         }
-
     }
 
     @Test

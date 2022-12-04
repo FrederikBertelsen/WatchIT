@@ -35,7 +35,7 @@ public class DataHandlerImpl implements DataHandler {
         ArrayList<String> result = new ArrayList<>();
         //imports the file to read from and creates a Scanner that reads from this file
         File file = new File(filePath);
-        Scanner s = new Scanner(file);
+        Scanner s = new Scanner(file, "ISO-8859-1");
 
         while (s.hasNextLine()) {
             result.add(s.nextLine());
