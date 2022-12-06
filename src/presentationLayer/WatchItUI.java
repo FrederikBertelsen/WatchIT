@@ -2,6 +2,7 @@ package presentationLayer;
 
 import domainLayer.DataBase;
 import domainLayer.DataBaseImpl;
+import domainLayer.dataStructure.Media;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 public class WatchItUI {
     private JFrame frame;
     private JMenuBar menuBar;
+    private Gallery gallery;
     private JTextField searchField;
     private ArrayList<SelectDropDown> dropdowns;
 
@@ -53,12 +55,8 @@ public class WatchItUI {
         frame.setJMenuBar(menuBar);
 
         // add gallery
-        Gallery gallery = new Gallery();
+        gallery = new Gallery();
         frame.add(new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-
-        DataBase db = new DataBaseImpl();
-        gallery.updatePanels(db.getMovies());
-
 
         frame.setLocationRelativeTo(null);
         frame.setSize(1920 / 2, 1080 / 2);
@@ -67,12 +65,12 @@ public class WatchItUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    // temp main klasse for at teste UI'et
-    public static void main(String[] args) {
-        WatchItUI watchItUI = new WatchItUI("WatchIt!");
-    }
-
     public ArrayList<SelectDropDown> getDropDowns() {
         return dropdowns;
+    }
+
+    public void updateGallery(ArrayList<Media> medias){
+        gallery.updatePanels(medias);
+
     }
 }  

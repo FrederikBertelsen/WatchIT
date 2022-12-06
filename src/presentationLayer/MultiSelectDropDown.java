@@ -17,13 +17,4 @@ public class MultiSelectDropDown extends SelectDropDown {
             add(menuItem);
         }
     }
-
-    public void resetSelected() {
-        // for each item in this menu
-        for (int i = 0; i < menuItems.length; i++) {
-            JMenuItem menuItem = menuItems[i];
-            // deselect it
-            menuItem.getModel().setSelected(false);
-        }
-    }
 }

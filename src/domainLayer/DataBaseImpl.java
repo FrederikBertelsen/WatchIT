@@ -120,41 +120,46 @@ public class DataBaseImpl implements DataBase {
 
     }
 
-
-    ArrayList<Media> getByGenre(ArrayList<Media> inputList, String[] genres) {
+    // these are temporarily set to public to test
+    @Override
+    public ArrayList<Media> filterByGenre(ArrayList<Media> inputList, String[] genres) {
         ArrayList<Media> output = new ArrayList<>();
 
-        for (Media media : inputList){
+        for (Media media : inputList) {
             boolean match = true;
-            for (String genre : genres){
-                if (!media.getGenres().contains(genre)){
+            for (String genre : genres) {
+                if (!media.getGenres().contains(genre)) {
                     match = false;
                     break;
                 }
             }
-            if (match){
+            if (match) {
                 output.add(media);
             }
         }
 
         return output;
     }
-    ArrayList<Media> getByRating (ArrayList<Media> inputList, double rating){
+
+    @Override
+    public ArrayList<Media> filterByRating(ArrayList<Media> inputList, double rating) {
         ArrayList<Media> output = new ArrayList<>();
 
-        for (Media media : inputList){
-            if (media.getRating() >= rating){
+        for (Media media : inputList) {
+            if (media.getRating() >= rating) {
                 output.add(media);
             }
         }
 
         return output;
     }
-    ArrayList<Media> getByYear (ArrayList<Media> inputList, double yearStart, double yearEnd){
+
+    @Override
+    public ArrayList<Media> filterByYear(ArrayList<Media> inputList, double yearStart, double yearEnd) {
         ArrayList<Media> output = new ArrayList<>();
 
-        for (Media media : inputList){
-            if (yearStart <= media.getRating() && media.getRating() <= yearEnd){
+        for (Media media : inputList) {
+            if (yearStart <= media.getRating() && media.getRating() <= yearEnd) {
                 output.add(media);
             }
         }

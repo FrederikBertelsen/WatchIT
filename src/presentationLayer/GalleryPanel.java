@@ -1,12 +1,13 @@
 package presentationLayer;
 
+import domainLayer.dataStructure.Media;
 import domainLayer.dataStructure.Movie;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GalleryPanel extends JPanel {
-    public GalleryPanel(Movie movie) {
+    public GalleryPanel(Media media) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -16,17 +17,17 @@ public class GalleryPanel extends JPanel {
         // temp border
         setBorder(BorderFactory.createBevelBorder(0));
 
-        JLabel picture = new JLabel(new ImageIcon(movie.getImage()));
+        JLabel picture = new JLabel(new ImageIcon(media.getImage()));
         addToPanel(picture);
-        String title = movie.getTitle();
-        if (movie.getTitle().length() > 30){
+        String title = media.getTitle();
+        if (media.getTitle().length() > 30){
             title = title.substring(0,30) + " ...";
         }
         JLabel name = new JLabel(title);
         addToPanel(name);
-        JLabel rating = new JLabel(String.valueOf(movie.getRating()));
+        JLabel rating = new JLabel(String.valueOf(media.getRating()));
         addToPanel(rating);
-        JLabel genres = new JLabel(String.join(", ", movie.getGenres()));
+        JLabel genres = new JLabel(String.join(", ", media.getGenres()));
         addToPanel(genres);
         JButton detailsButton = new JButton("View Details");
         add(detailsButton);

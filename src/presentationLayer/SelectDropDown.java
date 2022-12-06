@@ -27,6 +27,14 @@ public abstract class SelectDropDown extends JMenu {
         return selectedItems;
     }
 
+    public void resetSelected() {
+        // for each item in this menu
+        for (JMenuItem menuItem : menuItems) {
+            // deselect it
+            menuItem.getModel().setSelected(false);
+        }
+    }
+
     @Override
     public String getName() {
         return name;
