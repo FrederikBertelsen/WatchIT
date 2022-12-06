@@ -72,27 +72,28 @@ public class DataBaseImpl implements DataBase {
         shows = new Show[showStrings.size()];
 
         for (int i = 0; i < showStrings.size(); i++) {
-            String[] stringParts = showStrings.get(j).split("; ?");
+            String[] stringParts = showStrings.get(i).split("; ?");
 
             String title = stringParts[0];
 
-            String[] years = stringParts[1].split("-");
-            int releaseYear = Integer.parseInt(years[0]);
-            int toYear = Integer.parseInt(years[1]);
+
+            String[] years = stringParts[1].split(" ?- ?");
+            int releaseYear = Integer.parseInt(years[0].strip());
+            int toYear = 0;
+            if (years.length > 1) toYear = Integer.parseInt(years[1].strip());
 
             String[] genres = stringParts[2].split(", ?");
 
             stringParts[3] = stringParts[3].replace(",", ".");
             double rating = Double.parseDouble(stringParts[3]);
 
-            String[] seasonStrings = stringParts[4].split(", ");
-
+            String[] seasonStrings = stringParts[4].split(", ?");
             Season[] seasons = new Season[seasonStrings.length];
             for (int j = 0; j < seasonStrings.length; j++) {
                 String[] seasonStringParts = seasonStrings[j].split("-");
 
-                int seasonNumber = Integer.parseInt(seasonStringParts[0]);
-                int episodeCount = Integer.parseInt(seasonStringParts[1]);
+                int seasonNumber = Integer.parseInt(seasonStringParts[0].strip());
+                int episodeCount = Integer.parseInt(seasonStringParts[1].strip());
 
                 Episode[] episodes = new Episode[episodeCount];
                 for (int k = 0; k < episodeCount; k++) {
@@ -103,7 +104,12 @@ public class DataBaseImpl implements DataBase {
                 seasons[j] = newSeason;
             }
 
+
+
             BufferedImage image = showDataHandler.getImage(title);
+            if (image == null) {
+                System.out.println("Image for '" + title + "' not found!");
+            }
 
             Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image);
             shows[i] = show;

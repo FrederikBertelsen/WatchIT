@@ -6,9 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GalleryPanel extends JPanel {
-//    public GalleryPanel(String name, double rating, String[] genres, int year) {
     public GalleryPanel(Movie movie) {
-        super(new GridLayout(0,1));
+        super();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 //        setBounds(40, 80, 50, 100);
         setBackground(Color.lightGray);
@@ -17,19 +17,24 @@ public class GalleryPanel extends JPanel {
         setBorder(BorderFactory.createBevelBorder(0));
 
         JLabel picture = new JLabel(new ImageIcon(movie.getImage()));
-        add(picture);
+        addToPanel(picture);
         String title = movie.getTitle();
-        if (movie.getTitle().length() > 40){
-            title = title.substring(0,40) + " ...";
+        if (movie.getTitle().length() > 30){
+            title = title.substring(0,30) + " ...";
         }
         JLabel name = new JLabel(title);
-        add(name);
+        addToPanel(name);
         JLabel rating = new JLabel(String.valueOf(movie.getRating()));
-        add(rating);
+        addToPanel(rating);
         JLabel genres = new JLabel(String.join(", ", movie.getGenres()));
-        add(genres);
-        JButton playButton = new JButton("Play Movie");
-        add(playButton);
+        addToPanel(genres);
+        JButton detailsButton = new JButton("View Details");
+        add(detailsButton);
+    }
+
+    public void addToPanel(JLabel label){
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(label);
     }
 
 }

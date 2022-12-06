@@ -22,23 +22,31 @@ public class WatchItUI {
     // temp main klasse for at teste UI'et
     public static void main(String[] args) {
         frame = new JFrame(windowTitle);
+//        frame.getContentPane().setBackground(Color.black);
+
 
         // set up the top bar
         menuBar = new JMenuBar();
+
+        menuBar.setBackground(Color.BLACK);
+
         addComponentsToTopBar();
         frame.setJMenuBar(menuBar);
 
 
         // add gallery
-        GridLayout layout = new GridLayout(0, 5);
-//        layout.setHgap(10);
-        Gallery gallery = new Gallery(layout);
-        frame.add(BorderLayout.CENTER, new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        Gallery gallery = new Gallery();
+        frame.add(new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
 
         DataBase db = new DataBaseImpl();
         gallery.updatePanels(db.getMovies());
 
 
+        //test
+//        frame.add(new DetailsPanel());
+
+
+        frame.setLocationRelativeTo(null);
         frame.setSize(1920 / 2, 1080 / 2);
         frame.setVisible(true);
         frame.setLayout(new GridLayout());

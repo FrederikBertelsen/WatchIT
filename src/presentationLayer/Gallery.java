@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class Gallery extends JPanel {
     public GalleryPanel[] currentGalleryPanels;
-    public Gallery(GridLayout layout) {
-        super(layout);
+    public Gallery() {
+        super(new GridLayout(0, 5));
 
 //        setBounds(40, 80, 50, 100);
         setBackground(Color.gray);
