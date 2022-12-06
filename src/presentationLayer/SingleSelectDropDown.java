@@ -7,18 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SingleSelectDropDown extends JMenu {
-    private String name;
-    private String[] itemNames;
-
-    private JRadioButtonMenuItem[] menuItems;
-
-
+public class SingleSelectDropDown extends SelectDropDown {
     public SingleSelectDropDown(String name, String[] itemNames) {
-        super(name);
-
-        this.name = name;
-        this.itemNames = itemNames;
+        super(name, itemNames);
 
         menuItems = new JRadioButtonMenuItem[itemNames.length];
         for (int i = 0; i < itemNames.length; i++) {
@@ -36,12 +27,8 @@ public class SingleSelectDropDown extends JMenu {
         }
     }
 
-    public String getSelectedString() {
-        return getSelectedString();
-    }
-
     public void clearCheckBoxes(JRadioButtonMenuItem selectedMenuItem){
-        for (JRadioButtonMenuItem menuItem : menuItems) {
+        for (JMenuItem menuItem : menuItems) {
             if (menuItem != selectedMenuItem) {
                 menuItem.getModel().setSelected(false);
             }

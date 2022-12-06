@@ -2,11 +2,13 @@ package domainLayer.dataStructure;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public abstract class Media {
     private BufferedImage image;
     private String title;
-    private String[] genres;
+    private HashSet<String> genres;
     private double rating;
 
     private int releaseYear;
@@ -14,7 +16,7 @@ public abstract class Media {
 
     public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image){
         this.title = title;
-        this.genres = genres;
+        this.genres = new HashSet<>(List.of(genres));
         this.rating = rating;
         this.releaseYear = releaseYear;
         this.image = image;
@@ -28,7 +30,7 @@ public abstract class Media {
         return rating;
     }
 
-    public String[] getGenres() {
+    public HashSet<String> getGenres() {
         return genres;
     }
 

@@ -2,10 +2,7 @@ package domainLayer;
 
 import dataLayer.DataHandler;
 import dataLayer.DataHandlerImpl;
-import domainLayer.dataStructure.Episode;
-import domainLayer.dataStructure.Movie;
-import domainLayer.dataStructure.Season;
-import domainLayer.dataStructure.Show;
+import domainLayer.dataStructure.*;
 
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -25,20 +22,27 @@ public class DataBaseImpl implements DataBase {
     private String showPath = "data/serier.txt";
     private String showImageFolderPath = "data/serieforsider";
 
-    public DataBaseImpl(){
+    public DataBaseImpl() {
         movieDataHandler = new DataHandlerImpl(moviePath, movieImageFolderPath);
         showDataHandler = new DataHandlerImpl(showPath, showImageFolderPath);
 
         try {
             movieLoader(movieDataHandler.load());
             showLoader(showDataHandler.load());
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("Error in loading movie and show files: " + e.getMessage());
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error in loading movie and show images: " + e.getMessage());
         }
 
+    }
+
+    public Movie[] getMovies() {
+        return movies;
+    }
+
+    public Show[] getShows() {
+        return shows;
     }
 
     @Override
@@ -105,7 +109,6 @@ public class DataBaseImpl implements DataBase {
             }
 
 
-
             BufferedImage image = showDataHandler.getImage(title);
             if (image == null) {
                 System.out.println("Image for '" + title + "' not found!");
@@ -117,12 +120,46 @@ public class DataBaseImpl implements DataBase {
 
     }
 
-    public Movie[] getMovies(){
-        return movies;
-    }
 
-    public Show[] getShows(){
-        return shows;
+    ArrayList<Media> getByGenre(ArrayList<Media> inputList, String[] genres) {
+        ArrayList<Media> output = new ArrayList<>();
+
+        for (Media media : inputList){
+            boolean match = true;
+            for (String genre : genres){
+                if (!media.getGenres().contains(genre)){
+                    match = false;
+                    break;
+                }
+            }
+            if (match){
+                output.add(media);
+            }
+        }
+
+        return output;
+    }
+    ArrayList<Media> getByRating (ArrayList<Media> inputList, double rating){
+        ArrayList<Media> output = new ArrayList<>();
+
+        for (Media media : inputList){
+            if (media.getRating() >= rating){
+                output.add(media);
+            }
+        }
+
+        return output;
+    }
+    ArrayList<Media> getByYear (ArrayList<Media> inputList, double yearStart, double yearEnd){
+        ArrayList<Media> output = new ArrayList<>();
+
+        for (Media media : inputList){
+            if (yearStart <= media.getRating() && media.getRating() <= yearEnd){
+                output.add(media);
+            }
+        }
+
+        return output;
     }
 
 }
