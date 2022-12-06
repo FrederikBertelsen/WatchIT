@@ -4,31 +4,31 @@ import domainLayer.dataStructure.Movie;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Gallery extends JPanel {
-    public ArrayList<GalleryPanel> currentGalleryPanels;
+    public GalleryPanel[] currentGalleryPanels;
     public Gallery(GridLayout layout) {
         super(layout);
 
 //        setBounds(40, 80, 50, 100);
         setBackground(Color.gray);
 
-        currentGalleryPanels = new ArrayList<>();
+        currentGalleryPanels = new GalleryPanel[0];
     }
 
-    public void updatePanels(ArrayList<Movie> movies){
-        removeCurrentPanels();
+    public void updatePanels(Movie[] movies){
+        removeCurrentPanels(movies.length);
 
-        for (Movie movie : movies){
-            GalleryPanel newGalleryPanel = new GalleryPanel(movie);
+        for (int i = 0; i < movies.length; i++) {
+            GalleryPanel newGalleryPanel = new GalleryPanel(movies[i]);
+            currentGalleryPanels[i] = newGalleryPanel;
             add(newGalleryPanel);
         }
     }
-    public void removeCurrentPanels(){
-        for (GalleryPanel galleryPanel : currentGalleryPanels){
+    private void removeCurrentPanels(int newLength){
+        for(GalleryPanel galleryPanel : currentGalleryPanels){
             remove(galleryPanel);
         }
-        currentGalleryPanels = new ArrayList<>();
+        currentGalleryPanels = new GalleryPanel[newLength];
     }
 }

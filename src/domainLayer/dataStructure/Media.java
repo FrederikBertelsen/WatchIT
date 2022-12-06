@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public abstract class Media {
     private BufferedImage image;
     private String title;
-    private ArrayList<String> genres;
+    private String[] genres;
     private double rating;
 
     private int releaseYear;
 
 
-    public Media(String title, int releaseYear, ArrayList<String> genres, double rating, BufferedImage image){
+    public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image){
         this.title = title;
         this.genres = genres;
         this.rating = rating;
@@ -28,7 +28,7 @@ public abstract class Media {
         return rating;
     }
 
-    public ArrayList<String> getGenres() {
+    public String[] getGenres() {
         return genres;
     }
 

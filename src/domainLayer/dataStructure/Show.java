@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Show extends Media{
     private int toYear;
-    private ArrayList<Season> seasons;
+    private Season[] seasons;
 
-    public Show(String title, int releaseYear, int toYear, ArrayList<String> genres, double rating, ArrayList<Season> seasons, BufferedImage image){
+    public Show(String title, int releaseYear, int toYear, String[] genres, double rating, Season[] seasons, BufferedImage image){
         super(title, releaseYear, genres, rating, image);
         this.toYear = toYear;
         this.seasons = seasons;
@@ -15,6 +15,6 @@ public class Show extends Media{
 
 
     public int getSeasonCount(){
-        return seasons.size();
+        return seasons.length;
     }
 }

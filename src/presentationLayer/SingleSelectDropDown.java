@@ -11,7 +11,7 @@ public class SingleSelectDropDown extends JMenu {
     private String name;
     private String[] itemNames;
 
-    private ArrayList<JRadioButtonMenuItem> menuItems;
+    private JRadioButtonMenuItem[] menuItems;
 
 
     public SingleSelectDropDown(String name, String[] itemNames) {
@@ -20,10 +20,10 @@ public class SingleSelectDropDown extends JMenu {
         this.name = name;
         this.itemNames = itemNames;
 
-        menuItems = new ArrayList<>();
-        for (String genre : itemNames) {
-            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(genre);
-            menuItems.add(menuItem);
+        menuItems = new JRadioButtonMenuItem[itemNames.length];
+        for (int i = 0; i < itemNames.length; i++) {
+            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(itemNames[i]);
+            menuItems[i] = menuItem;
 
             menuItem.addActionListener(new ActionListener() {
                 @Override

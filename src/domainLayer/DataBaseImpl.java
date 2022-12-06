@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DataBaseImpl implements DataBase {
-    private ArrayList<Movie> movies;
-    private ArrayList<Show> shows;
+    private Movie[] movies;
+    private Show[] shows;
 
     private DataHandler movieDataHandler;
     private String moviePath = "data/film.txt";
@@ -43,77 +43,79 @@ public class DataBaseImpl implements DataBase {
 
     @Override
     public void movieLoader(ArrayList<String> moviesStrings) throws IOException {
-        movies = new ArrayList<>();
+        movies = new Movie[moviesStrings.size()];
+        // for hver linje af data, lav et Movie object der indeholder data'en
+        for (int i = 0; i < moviesStrings.size(); i++) {
+            String[] stringParts = moviesStrings.get(i).split("; ?");
 
-        for (String string : moviesStrings) {
+            String title = stringParts[0];
 
-            String[] parts = string.split("; ?");
+            int year = Integer.parseInt(stringParts[1]);
 
-            String title = parts[0];
+            String[] genres = stringParts[2].split(", ");
 
-            int year = Integer.parseInt(parts[1]);
-
-            ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ")));
-
-            parts[3] = parts[3].replace(",", ".");
-            double rating = Double.parseDouble(parts[3]);
+            stringParts[3] = stringParts[3].replace(",", ".");
+            double rating = Double.parseDouble(stringParts[3]);
 
             BufferedImage image = movieDataHandler.getImage(title);
-            if (image == null){
-                System.out.println(title);
+            if (image == null) {
+                System.out.println("Image for '" + title + "' not found!");
             }
 
             Movie movie = new Movie(title, year, genres, rating, image);
-            movies.add(movie);
+            movies[i] = movie;
         }
     }
 
     @Override
     public void showLoader(ArrayList<String> showStrings) throws IOException {
-        shows = new ArrayList<>();
+        shows = new Show[showStrings.size()];
 
-        for (String string : showStrings) {
+        for (int i = 0; i < showStrings.size(); i++) {
+            String[] stringParts = showStrings.get(j).split("; ?");
 
-            String[] parts = string.split("; ?");
-            String title = parts[0];
+            String title = stringParts[0];
 
-            String[] years = parts[1].split("-");
+            String[] years = stringParts[1].split("-");
             int releaseYear = Integer.parseInt(years[0]);
             int toYear = Integer.parseInt(years[1]);
 
-            ArrayList<String> genres = new ArrayList<>(Arrays.asList(parts[2].split(", ?")));
+            String[] genres = stringParts[2].split(", ?");
 
-            parts[3] = parts[3].replace(",", ".");
-            double rating = Double.parseDouble(parts[3]);
+            stringParts[3] = stringParts[3].replace(",", ".");
+            double rating = Double.parseDouble(stringParts[3]);
 
-            ArrayList<Season> seasons = new ArrayList<>();
-            for (String seasonString : parts[4].split(", ")) {
-                String[] str = seasonString.split("-");
-                int seasonNumber = Integer.parseInt(str[0]);
-                int episodeCount = Integer.parseInt(str[1]);
+            String[] seasonStrings = stringParts[4].split(", ");
 
-                ArrayList<Episode> episodes = new ArrayList<>();
-                for (int i = 0; i < episodeCount + 1; i++) {
+            Season[] seasons = new Season[seasonStrings.length];
+            for (int j = 0; j < seasonStrings.length; j++) {
+                String[] seasonStringParts = seasonStrings[j].split("-");
+
+                int seasonNumber = Integer.parseInt(seasonStringParts[0]);
+                int episodeCount = Integer.parseInt(seasonStringParts[1]);
+
+                Episode[] episodes = new Episode[episodeCount];
+                for (int k = 0; k < episodeCount; k++) {
                     Episode newEpisode = new Episode(i);
-                    episodes.add(newEpisode);
+                    episodes[k] = newEpisode;
                 }
                 Season newSeason = new Season(seasonNumber, episodes);
-                seasons.add(newSeason);
+                seasons[j] = newSeason;
             }
 
             BufferedImage image = showDataHandler.getImage(title);
 
             Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image);
-            shows.add(show);
+            shows[i] = show;
         }
 
     }
 
-    public ArrayList<Movie> getMovies(){
+    public Movie[] getMovies(){
         return movies;
     }
 
-    public ArrayList<Show> getShows(){
+    public Show[] getShows(){
         return shows;
     }
 

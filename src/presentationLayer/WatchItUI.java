@@ -13,12 +13,13 @@ public class WatchItUI {
 
     private static String windowTitle = "WatchIt!";
 
-    // filter texts
+    // temp filter texts
     public static String[] movie_show = new String[]{"Film", "Serier"};
     public static String[] genres = new String[]{"Horror", "Action", "Romance"};
     public static String[] ratings = new String[]{">0.0", ">6.0", ">7.0", ">8.0", ">9.0", ">9.5"};
     public static String[] years = new String[]{"2020s", "2010s", "2000s", "1990s"};
 
+    // temp main klasse for at teste UI'et
     public static void main(String[] args) {
         frame = new JFrame(windowTitle);
 

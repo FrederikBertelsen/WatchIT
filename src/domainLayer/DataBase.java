@@ -10,7 +10,7 @@ public interface DataBase {
     void movieLoader(ArrayList<String> movieStrings) throws IOException;
     void showLoader(ArrayList<String> showStrings) throws IOException;
 
-    ArrayList<Movie> getMovies();
+    Movie[] getMovies();
 
-    ArrayList<Show> getShows();
+    Show[] getShows();
 }
