@@ -29,10 +29,17 @@ public class mediaDataTest {
         dataHandler = new DataHandlerImpl(filePath, "data/serieforsider");
     }
 
+    /*@BeforeEach
+    public void setUp(){
+        filePath = "data/film.txt";
+        dataHandler = new DataHandlerImpl(filePath, "data/filmplakater");
+    }*/
+
     @AfterEach
     public void tearDown(){
         dataHandler = null;
         data = null;
+        filePath = null;
     }
 
     @Test
@@ -55,7 +62,22 @@ public class mediaDataTest {
 
 
     @Test
-    public void loadTest() {
+    public void loadMovieTest() {
+        filePath = "data/film.txt";
+        dataHandler = new DataHandlerImpl(filePath, "data/filmplakater");
+        try {
+            data = dataHandler.load();
+        } catch (FileNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        assertEquals(data.get(0),"The Godfather; 1972; Crime, Drama; 9,2; ");
+        assertEquals(data.get(53),"The Good, The Bad And The Ugly; 1966; Western; 8,9;");
+    }
+
+    @Test
+    public void loadShowTest() {
+        filePath = "data/serier.txt";
+        dataHandler = new DataHandlerImpl(filePath, "data/serieforsider");
         try {
             data = dataHandler.load();
         } catch (FileNotFoundException e){
@@ -74,6 +96,4 @@ public class mediaDataTest {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
-
 }
-

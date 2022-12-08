@@ -22,7 +22,7 @@ public class favoritesDataTest {
     String filePath;
     @BeforeEach
     public void setUp(){
-        filePath = "data/favorits.txt";
+        filePath = "data/favorites.txt";
         dataHandler = new DataHandlerImpl(filePath);
         try {
             data = dataHandler.load();

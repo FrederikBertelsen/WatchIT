@@ -59,6 +59,7 @@ public class DataHandlerImpl implements DataHandler {
         try{
             for (String s:load()){
                 if(data.equals(s)) {
+                    //her sættes exists til true og den skrives ikke til den nye fil.
                     exists = true;
                 }
                 else {
@@ -66,7 +67,7 @@ public class DataHandlerImpl implements DataHandler {
                 }
             }
         } catch (FileNotFoundException e){
-
+            throw new FileNotFoundException();
         }
         finally {
             //vi lukker vores pw inden vi kaster en exception
