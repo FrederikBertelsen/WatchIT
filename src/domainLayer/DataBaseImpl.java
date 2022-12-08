@@ -8,12 +8,13 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class DataBaseImpl implements DataBase {
     private Movie[] movies;
     private Show[] shows;
-
     private DataHandler movieDataHandler;
     private String moviePath = "data/film.txt";
     private String movieImageFolderPath = "data/filmplakater";
@@ -44,6 +45,7 @@ public class DataBaseImpl implements DataBase {
     public Show[] getShows() {
         return shows;
     }
+
 
     @Override
     public void movieLoader(ArrayList<String> moviesStrings) throws IOException {
@@ -120,9 +122,77 @@ public class DataBaseImpl implements DataBase {
 
     }
 
-    // these are temporarily set to public to test
     @Override
-    public ArrayList<Media> filterByGenre(ArrayList<Media> inputList, String[] genres) {
+    public ArrayList<Media> filterMedia(HashSet<String> types, HashSet<String> genres, String rating, String years, String sortBy, String sortByDirection, String searchTerm) {
+        // filter by types
+        ArrayList<Media> output = getByType(types);
+        if (output.size() == 0) return output;
+
+        // filter by genres
+        output = filterByGenre(output, genres);
+
+        // filter by rating
+        if (!rating.equals("")) {
+            double ratingDouble = Double.parseDouble(rating.substring(1));
+            output = filterByRating(output, ratingDouble);
+        }
+
+        //filter by year range
+        if (!years.equals("")) {
+            String[] yearParts = years.split("-");
+            int yearFrom = Integer.parseInt(yearParts[0]);
+            int yearTo = Integer.MAX_VALUE;
+            // if there exists a end year (the show is still running)
+            if (yearParts[1].matches("\\d+")) {
+                yearTo = Integer.parseInt(yearParts[1]);
+            }
+            output = filterByYear(output, yearFrom, yearTo);
+        }
+
+
+        // sort by
+        if (!sortBy.equals("")) {
+            if (sortBy.equals("Titel")) {
+                output.sort(Comparator.comparing(Media::getTitle));
+            } else if (sortBy.equals("Rating")) {
+                output.sort(Comparator.comparing(Media::getRating));
+            } else if (sortBy.equals("Årstal")) {
+                output.sort(Comparator.comparing(Media::getReleaseYear));
+            }
+        }
+
+        if (!searchTerm.equals("")) {
+            output = StringMatcher.getMatches(searchTerm, output);
+        }
+
+        // sort by direction
+        if (sortByDirection.equals("Descending")) {
+            Collections.reverse(output);
+        }
+
+        return output;
+    }
+
+    @Override
+    public ArrayList<Media> getByType(HashSet<String> types) {
+        ArrayList<Media> output = new ArrayList<>();
+
+        if (types.size() == 0) {
+            Collections.addAll(output, getMovies());
+            Collections.addAll(output, getShows());
+        } else if (types.contains("Film")) {
+            Collections.addAll(output, getMovies());
+        } else if (types.contains("Serier")) {
+            Collections.addAll(output, getShows());
+        }
+
+        return output;
+    }
+
+    @Override
+    public ArrayList<Media> filterByGenre(ArrayList<Media> inputList, HashSet<String> genres) {
+        if (genres.size() == 0) return inputList;
+
         ArrayList<Media> output = new ArrayList<>();
 
         for (Media media : inputList) {
@@ -155,11 +225,11 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
-    public ArrayList<Media> filterByYear(ArrayList<Media> inputList, double yearStart, double yearEnd) {
+    public ArrayList<Media> filterByYear(ArrayList<Media> inputList, int yearStart, int yearEnd) {
         ArrayList<Media> output = new ArrayList<>();
 
         for (Media media : inputList) {
-            if (yearStart <= media.getRating() && media.getRating() <= yearEnd) {
+            if (yearStart <= media.getReleaseYear() && media.getReleaseYear() <= yearEnd) {
                 output.add(media);
             }
         }

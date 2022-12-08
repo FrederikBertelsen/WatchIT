@@ -27,11 +27,22 @@ public class SingleSelectDropDown extends SelectDropDown {
         }
     }
 
-    public void clearCheckBoxes(JRadioButtonMenuItem selectedMenuItem){
+    public void clearCheckBoxes(JRadioButtonMenuItem selectedMenuItem) {
         for (JMenuItem menuItem : menuItems) {
             if (menuItem != selectedMenuItem) {
                 menuItem.getModel().setSelected(false);
             }
         }
+    }
+
+    public String getSelected() {
+        // for each item in this menu
+        for (JMenuItem menuItem : menuItems) {
+            // if the item is selected, add it's text to the output
+            if (menuItem.getModel().isSelected()) {
+                return menuItem.getText();
+            }
+        }
+        return "";
     }
 }

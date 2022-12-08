@@ -6,6 +6,7 @@ import domainLayer.dataStructure.Show;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public interface DataBase {
     Movie[] getMovies();
@@ -16,9 +17,10 @@ public interface DataBase {
 
     void showLoader(ArrayList<String> showStrings) throws IOException;
 
-    ArrayList<Media> filterByGenre(ArrayList<Media> inputList, String[] genres);
+    ArrayList<Media> filterMedia(HashSet<String> types, HashSet<String> genres, String rating, String years, String sortBy, String sortByDirection, String SearchTerm);
 
+    ArrayList<Media> getByType(HashSet<String> types);
+    ArrayList<Media> filterByGenre(ArrayList<Media> inputList, HashSet<String> genres);
     ArrayList<Media> filterByRating(ArrayList<Media> inputList, double rating);
-
-    ArrayList<Media> filterByYear(ArrayList<Media> inputList, double yearStart, double yearEnd);
+    ArrayList<Media> filterByYear(ArrayList<Media> inputList, int yearStart, int yearEnd);
 }

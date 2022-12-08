@@ -14,7 +14,7 @@ public abstract class Media {
     private int releaseYear;
 
 
-    public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image){
+    public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image) {
         this.title = title;
         this.genres = new HashSet<>(List.of(genres));
         this.rating = rating;
@@ -22,11 +22,11 @@ public abstract class Media {
         this.image = image;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public double getRating(){
+    public double getRating() {
         return rating;
     }
 

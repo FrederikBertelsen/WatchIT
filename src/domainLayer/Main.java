@@ -4,22 +4,20 @@ import domainLayer.dataStructure.Media;
 import presentationLayer.WatchItUI;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Main {
+    public static WatchItUI ui;
+    public static DataBase db;
+
     public static void main(String[] args) {
-        WatchItUI ui = new WatchItUI("WatchIt!");
+        ui = new WatchItUI("WatchIT");
+        db = new DataBaseImpl();
 
-        DataBase db = new DataBaseImpl();
-
-        ArrayList<Media> medias = new ArrayList<>();
-        Collections.addAll(medias, db.getShows());
-
-        // filter test
-        medias = db.filterByRating(medias,8);
-        medias = db.filterByGenre(medias,new String[]{"Action", "Drama"});
-
-        ui.updateGallery(medias);
+        updateUI();
     }
 
+    public static void updateUI() {
+        ArrayList<Media> medias = db.filterMedia(ui.getSelectedTypes(), ui.getSelectedGenres(), ui.getSelectedRating(), ui.getSelectedYear(), ui.getSelectedSortBy(), ui.getSelectedSortByDirection(), ui.getSearchTerm());
+        ui.updateGallery(medias);
+    }
 }
