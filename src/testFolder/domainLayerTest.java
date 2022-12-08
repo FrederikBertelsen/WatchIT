@@ -29,7 +29,7 @@ public class domainLayerTest {
 
         dataBase.movieLoader(load);
 
-        ArrayList<Movie> movies = dataBase.getMovies();
+        Movie[] movies = dataBase.getMovies();
         int i = 1;
         for (Movie movie : movies){
             System.out.println(i + " " + movie.getTitle() );
@@ -44,11 +44,11 @@ public class domainLayerTest {
 
         //dataBase = new DataBaseImpl();
         dataBase.movieLoader(moviesInputStrings);
-        ArrayList<Movie> movies = dataBase.getMovies();
+        Movie[] movies = dataBase.getMovies();
 
-        for (int i = 0; i < movies.size(); i++) {
+        for (int i = 0; i < movies.length; i++) {
             String[] parts = moviesInputStrings.get(i).split("; ?");
-            Movie currentMovie = movies.get(i);
+            Movie currentMovie = movies[i];
 
             assertEquals(parts[0], currentMovie.getTitle());
             assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
