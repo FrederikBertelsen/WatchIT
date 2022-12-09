@@ -46,16 +46,16 @@ public class DetailsView extends JPanel {
 //        addToPanel(spacer);
 
         JLabel genres = new JLabel(String.join(", ", media.getGenres()));
-        genres.setFont(new Font("", Font.PLAIN, 25));
+        genres.setFont(new Font("", Font.PLAIN, 20));
         addToPanel(genres);
 
         JLabel rating = new JLabel("Rating: " + media.getRating());
-        rating.setFont(new Font("", Font.PLAIN, 25));
+        rating.setFont(new Font("", Font.PLAIN, 20));
         addToPanel(rating);
 
         JLabel year = new JLabel(media.getYearString());
         addToPanel(year);
-        year.setFont(new Font("", Font.PLAIN, 25));
+        year.setFont(new Font("", Font.PLAIN, 20));
 
 //        JLabel spacer1 = new JLabel("      ");
 //        spacer1.setFont(new Font("", Font.PLAIN, 60));
