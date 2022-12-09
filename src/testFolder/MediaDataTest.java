@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 
-public class mediaDataTest {
+public class MediaDataTest {
     DataHandler dataHandler;
     ArrayList<String> data;
     String filePath;

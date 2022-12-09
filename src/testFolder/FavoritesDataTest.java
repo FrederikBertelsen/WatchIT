@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class favoritesDataTest {
+public class FavoritesDataTest {
     boolean correctTestPath;
     DataHandler dataHandler;
     ArrayList<String> data;
