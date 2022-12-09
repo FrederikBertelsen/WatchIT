@@ -22,6 +22,6 @@ public class Show extends Media {
         if (toYear != 0){
             return super.getYearString() + " - " + toYear;
         }
-        return super.getYearString() + " -      ";
+        return super.getYearString() + " - NU   ";
     }
 }
