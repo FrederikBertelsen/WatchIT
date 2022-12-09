@@ -54,15 +54,20 @@ public class DataBaseImpl implements DataBase {
         for (int i = 0; i < moviesStrings.size(); i++) {
             String[] stringParts = moviesStrings.get(i).split("; ?");
 
+            //Titel
             String title = stringParts[0];
 
+            //Udgivelsesår
             int year = Integer.parseInt(stringParts[1]);
 
+            // Genre i StringArray. Splitter strengen med alle genre, og sætter hvert enkle i et Array.
             String[] genres = stringParts[2].split(", ");
 
+            //Rating (bliver skrevet med komma i dataen, men skal bruges med "." som en double)
             stringParts[3] = stringParts[3].replace(",", ".");
             double rating = Double.parseDouble(stringParts[3]);
 
+            //Finder tilhørende billede ud fra titlen
             BufferedImage image = movieDataHandler.getImage(title);
             if (image == null) {
                 System.out.println("Image for '" + title + "' not found!");
@@ -77,23 +82,29 @@ public class DataBaseImpl implements DataBase {
     @Override
     public void showLoader(ArrayList<String> showStrings) throws IOException {
         shows = new Show[showStrings.size()];
-
+        // For hver linje i data'en, splittes de og opretter et nyt show og fordeler data'en
         for (int i = 0; i < showStrings.size(); i++) {
             String[] stringParts = showStrings.get(i).split("; ?");
 
+            //Titlen
             String title = stringParts[0];
 
-
+            // Årstal (Start / slut)
             String[] years = stringParts[1].split(" ?- ?");
             int releaseYear = Integer.parseInt(years[0].strip());
             int toYear = 0;
             if (years.length > 1) toYear = Integer.parseInt(years[1].strip());
 
+            // Genre i StringArray. Splitter strengen med alle genre, og sætter hvert enkle i et Array.
             String[] genres = stringParts[2].split(", ?");
 
+            //Rating (bliver skrevet med komma i dataen, men skal bruges med "." som en double)
             stringParts[3] = stringParts[3].replace(",", ".");
             double rating = Double.parseDouble(stringParts[3]);
 
+            //Splitter først, så man får et Array med Season med antal episoder
+            //Herefter splitter hver enkelt sæson med dens antal episoder, og opretter så antallet af episoder
+            //på hver objekt af sæsoner.
             String[] seasonStrings = stringParts[4].split(", ?");
             Season[] seasons = new Season[seasonStrings.length];
             for (int j = 0; j < seasonStrings.length; j++) {
@@ -111,7 +122,7 @@ public class DataBaseImpl implements DataBase {
                 seasons[j] = newSeason;
             }
 
-
+            //Finder tilhørende billede ud fra filen
             BufferedImage image = showDataHandler.getImage(title);
             if (image == null) {
                 System.out.println("Image for '" + title + "' not found!");
