@@ -25,8 +25,8 @@ public class GalleryPanel extends JPanel {
         JLabel picture = new JLabel(new ImageIcon(media.getImage()));
         addToPanel(picture);
         String title = media.getTitle();
-        if (media.getTitle().length() > 30){
-            title = title.substring(0,30) + " ...";
+        if (media.getTitle().length() > 25){
+            title = title.substring(0,25) + " ...";
         }
         JLabel name = new JLabel(title);
         name.setFont(new Font("", Font.BOLD, 14));

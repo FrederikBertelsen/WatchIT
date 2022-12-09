@@ -34,32 +34,32 @@ public class DetailsView extends JPanel {
             remove(component);
         }
         JLabel name = new JLabel(media.getTitle());
-        name.setFont(new Font("", Font.BOLD, 40));
+        name.setFont(new Font("", Font.BOLD, 35));
         addToPanel(name);
 
         Image scaledImage = media.getImage().getScaledInstance(media.getImage().getWidth() * 2, media.getImage().getHeight()*2, Image.SCALE_FAST);
         JLabel picture = new JLabel(new ImageIcon(scaledImage));
         addToPanel(picture);
 
-        JLabel spacer = new JLabel("     ");
-        spacer.setFont(new Font("", Font.PLAIN, 40));
-        addToPanel(spacer);
+//        JLabel spacer = new JLabel("     ");
+//        spacer.setFont(new Font("", Font.PLAIN, 40));
+//        addToPanel(spacer);
 
         JLabel genres = new JLabel(String.join(", ", media.getGenres()));
-        genres.setFont(new Font("", Font.PLAIN, 30));
+        genres.setFont(new Font("", Font.PLAIN, 25));
         addToPanel(genres);
 
         JLabel rating = new JLabel("Rating: " + media.getRating());
-        rating.setFont(new Font("", Font.PLAIN, 30));
+        rating.setFont(new Font("", Font.PLAIN, 25));
         addToPanel(rating);
 
         JLabel year = new JLabel(media.getYearString());
         addToPanel(year);
-        year.setFont(new Font("", Font.PLAIN, 30));
+        year.setFont(new Font("", Font.PLAIN, 25));
 
-        JLabel spacer1 = new JLabel("      ");
-        spacer1.setFont(new Font("", Font.PLAIN, 60));
-        addToPanel(spacer1);
+//        JLabel spacer1 = new JLabel("      ");
+//        spacer1.setFont(new Font("", Font.PLAIN, 60));
+//        addToPanel(spacer1);
 
         JButton playButton = new JButton("    Afspil    ");
         playButton.setFont(new Font("", Font.PLAIN, 40));

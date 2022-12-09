@@ -83,6 +83,8 @@ public class WatchItUI {
             Main.updateUI();
         });
         menuBar.add(searchButton);
+        frame.getRootPane().setDefaultButton(searchButton);
+
 
         frame.setJMenuBar(menuBar);
 
