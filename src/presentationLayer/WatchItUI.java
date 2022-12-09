@@ -1,22 +1,18 @@
 package presentationLayer;
 
-import domainLayer.DataBase;
-import domainLayer.DataBaseImpl;
 import domainLayer.Main;
 import domainLayer.dataStructure.Media;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class WatchItUI {
     private JFrame frame;
     private JMenuBar menuBar;
     private Gallery gallery;
+    private JScrollPane galleryScrollPane;
+    private DetailsView detailsView;
 
     private JTextField searchField;
     private MultiSelectDropDown typeDropDown;
@@ -32,9 +28,9 @@ public class WatchItUI {
     public String[] movie_show = new String[]{"Film", "Serier"};
     public String[] genres = new String[]{"Action", "Adventure", "Biography", "Comedy", "Crime", "Drama", "Family", "Fantasy", "Film-Noir", "History", "Horror", "Music", "Musical", "Mystery", "Romance", "Sci-fi", "Sport", "Thriller", "War", "Western"};
     public String[] ratings = new String[]{">5.0", ">6.0", ">7.0", ">8.0", ">9.0", ">9.5"};
-    public String[] years = new String[]{"2020-NU", "2010-2020", "2000-2010", "1990-2000"};
+    public String[] years = new String[]{"2010-2020", "2000-2010", "1990-2000", "1980-1990", "1970-1980", "1960-1970", "1950-1960", "1940-1950", "1930-1940", "       0-1930"};
     public String[] sortBy = new String[]{"Titel", "Rating", "Årstal"};
-    public String[] sortByDirections = new String[]{"Ascending", "Descending"};
+    public String[] sortByDirections = new String[]{"Stigende", "Faldende"};
 
 
     public WatchItUI(String windowTitle) {
@@ -71,35 +67,66 @@ public class WatchItUI {
         menuBar.add(sortByDirectionMenu);
         sortByDirectionDropDown = sortByDirectionMenu;
 
+        // reset button
+        JButton resetButton = new JButton("Nulstil filtre");
+        resetButton.addActionListener(e -> {
+            resetFilters();
+        });
+        menuBar.add(resetButton);
+
+
         // search field and search button
         searchField = new JTextField();
         menuBar.add(searchField);
         JButton searchButton = new JButton("søg");
-
         searchButton.addActionListener(e -> {
             Main.updateUI();
         });
-
-
         menuBar.add(searchButton);
 
         frame.setJMenuBar(menuBar);
 
-        // add gallery
+        // create and add gallery
         gallery = new Gallery();
-        frame.add(new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        galleryScrollPane = new JScrollPane(gallery, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        frame.add(galleryScrollPane);
 
-        frame.setLocationRelativeTo(null);
+        // create details view
+        detailsView = new DetailsView();
+
+//        frame.setLocationRelativeTo(null);
         frame.setSize(1920 / 2, 1080 / 2);
         frame.setVisible(true);
-        frame.setLayout(new GridLayout());
+//        frame.setLayout(new GridLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void goToDetailsView(Media media){
+        frame.remove(galleryScrollPane);
+
+        detailsView.update(media);
+
+        frame.add(detailsView);
+
+        frame.setVisible(true);
     }
 
     public void updateGallery(ArrayList<Media> medias) {
         gallery.updatePanels(medias);
         frame.setVisible(true);
+    }
 
+    private void resetFilters() {
+        searchField.setText("");
+
+        typeDropDown.resetSelected();
+        genreDropDown.resetSelected();
+        ratingDropDown.resetSelected();
+        yearDropDown.resetSelected();
+        sortByDropDown.resetSelected();
+        sortByDirectionDropDown.resetSelected();
+
+        Main.updateUI();
     }
 
 

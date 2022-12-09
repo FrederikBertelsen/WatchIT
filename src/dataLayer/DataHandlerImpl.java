@@ -50,7 +50,7 @@ public class DataHandlerImpl implements DataHandler {
         //her laver vi den fil som bliver til den nye "favorites.txt" fil
         File newFile = new File("./tempFile.txt");
         //for at sørge for at vi ikke skriver til en existerende fil fjerner vi filer ved navn "tempFile.txt" før vi forsøger at skabe den
-        if (!newFile.exists()) newFile.delete();
+        if (newFile.exists()) newFile.delete();
         newFile.createNewFile();
         //initialiserer vores writer for at kunne skrive til filen
         PrintWriter pw = new PrintWriter(newFile);
@@ -88,7 +88,7 @@ public class DataHandlerImpl implements DataHandler {
         //her laver vi den fil som bliver til "favorit.txt" filen
         File favorites = new File(filePath);
         //hvis der ikke existerer en favorites fil laver vi den
-        if (!favorites.exists()) favorites.createNewFile();
+        if (favorites.exists()) favorites.createNewFile();
         //initialiserer vores writer for at kunne skrive til filen
         PrintWriter pw = new PrintWriter(favorites);
         //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen kaster vi en exception

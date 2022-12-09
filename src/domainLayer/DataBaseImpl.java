@@ -68,7 +68,8 @@ public class DataBaseImpl implements DataBase {
                 System.out.println("Image for '" + title + "' not found!");
             }
 
-            Movie movie = new Movie(title, year, genres, rating, image);
+            //TODO: add favorited functionality
+            Movie movie = new Movie(title, year, genres, rating, image, false);
             movies[i] = movie;
         }
     }
@@ -116,7 +117,8 @@ public class DataBaseImpl implements DataBase {
                 System.out.println("Image for '" + title + "' not found!");
             }
 
-            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image);
+            // TODO: create favorited functionality
+            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image, false);
             shows[i] = show;
         }
 
@@ -140,12 +142,9 @@ public class DataBaseImpl implements DataBase {
         //filter by year range
         if (!years.equals("")) {
             String[] yearParts = years.split("-");
-            int yearFrom = Integer.parseInt(yearParts[0]);
-            int yearTo = Integer.MAX_VALUE;
-            // if there exists a end year (the show is still running)
-            if (yearParts[1].matches("\\d+")) {
-                yearTo = Integer.parseInt(yearParts[1]);
-            }
+            int yearFrom = Integer.parseInt(yearParts[0].strip());
+            int yearTo = Integer.parseInt(yearParts[1].strip());
+
             output = filterByYear(output, yearFrom, yearTo);
         }
 
@@ -157,7 +156,7 @@ public class DataBaseImpl implements DataBase {
             } else if (sortBy.equals("Rating")) {
                 output.sort(Comparator.comparing(Media::getRating));
             } else if (sortBy.equals("Årstal")) {
-                output.sort(Comparator.comparing(Media::getReleaseYear));
+                output.sort(Comparator.comparing(Media::getYear));
             }
         }
 
@@ -166,7 +165,7 @@ public class DataBaseImpl implements DataBase {
         }
 
         // sort by direction
-        if (sortByDirection.equals("Descending")) {
+        if (sortByDirection.equals("Faldende")) {
             Collections.reverse(output);
         }
 
@@ -229,7 +228,7 @@ public class DataBaseImpl implements DataBase {
         ArrayList<Media> output = new ArrayList<>();
 
         for (Media media : inputList) {
-            if (yearStart <= media.getReleaseYear() && media.getReleaseYear() <= yearEnd) {
+            if (yearStart <= media.getYear() && media.getYear() <= yearEnd) {
                 output.add(media);
             }
         }

@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileNotFoundException;
-
 public class domainLayerTest {
     private DataBase dataBase;
 
@@ -51,7 +49,7 @@ public class domainLayerTest {
             Movie currentMovie = movies[i];
 
             assertEquals(parts[0], currentMovie.getTitle());
-            assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
+            assertEquals(Integer.parseInt(parts[1]), currentMovie.getYear());
             assertEquals(new ArrayList<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
             assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
         }

@@ -1,14 +1,19 @@
 package presentationLayer;
 
+import domainLayer.Main;
 import domainLayer.dataStructure.Media;
-import domainLayer.dataStructure.Movie;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GalleryPanel extends JPanel {
+
+    private Media media;
+
     public GalleryPanel(Media media) {
         super();
+        this.media = media;
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 //        setBounds(40, 80, 50, 100);
@@ -24,16 +29,22 @@ public class GalleryPanel extends JPanel {
             title = title.substring(0,30) + " ...";
         }
         JLabel name = new JLabel(title);
+        name.setFont(new Font("", Font.BOLD, 14));
         addToPanel(name);
-        JLabel rating = new JLabel(String.valueOf(media.getRating()));
-        addToPanel(rating);
         JLabel genres = new JLabel(String.join(", ", media.getGenres()));
         addToPanel(genres);
+        JLabel rating = new JLabel("Rating: " + media.getRating());
+        addToPanel(rating);
+        JLabel year = new JLabel(media.getYearString());
+        addToPanel(year);
         JButton detailsButton = new JButton("View Details");
-        add(detailsButton);
+        detailsButton.addActionListener(e -> {
+            Main.goToDetailsView(media);
+        });
+        addToPanel(detailsButton);
     }
 
-    public void addToPanel(JLabel label){
+    private void addToPanel(JComponent label){
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
     }

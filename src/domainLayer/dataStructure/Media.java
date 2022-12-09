@@ -1,7 +1,6 @@
 package domainLayer.dataStructure;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -10,16 +9,16 @@ public abstract class Media {
     private String title;
     private HashSet<String> genres;
     private double rating;
-
     private int releaseYear;
+    private boolean favorited;
 
-
-    public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image) {
+    public Media(String title, int releaseYear, String[] genres, double rating, BufferedImage image, boolean favorited) {
         this.title = title;
         this.genres = new HashSet<>(List.of(genres));
         this.rating = rating;
         this.releaseYear = releaseYear;
         this.image = image;
+        this.favorited = favorited;
     }
 
     public String getTitle() {
@@ -34,11 +33,18 @@ public abstract class Media {
         return genres;
     }
 
-    public int getReleaseYear() {
+    public int getYear() {
         return releaseYear;
+    }
+    public String getYearString() {
+        return String.valueOf(releaseYear);
     }
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public boolean getFavorited(){
+        return favorited;
     }
 }
