@@ -1,32 +1,21 @@
 package domainLayer;
 
 import domainLayer.dataStructure.Media;
-import domainLayer.dataStructure.Movie;
 
 import java.util.*;
 
 public class StringMatcher {
 
-    //    public static void main(String[] args) {
-//        ArrayList<Media> medias = new ArrayList<>();
-//        medias.add(new Movie("batman", 1990, new String[]{"Horror"}, 10, null));
-//
-//        String searchTerm = "batman";
-//
-////        int score = calcStringLikeness(searchTerm, medias.get(0).getTitle());
-////        System.out.println(score);
-//
-//        getMatches(searchTerm,medias);
-//    }
-    private static double getMinimumScore(String searchTerm) {
+    //Udregner den mindste score et match skal have for at blive vist på skærmen.
+    private static double calcMinimumScore(String searchTerm) {
         return 1.0 * searchTerm.length() / 1.2;
     }
+
 
     public static ArrayList<Media> getMatches(String searchTerm, ArrayList<Media> medias) {
         searchTerm = searchTerm.toLowerCase();
 
-        double minimumScore = getMinimumScore(searchTerm);
-        System.out.println("Minimum Score: " + minimumScore);
+        double minimumScore = calcMinimumScore(searchTerm);
 
         ArrayList<Map.Entry<Media, Integer>> matchedMedias = new ArrayList<>();
         for (Media media : medias) {
