@@ -1,6 +1,5 @@
 package presentationLayer;
 
-import domainLayer.Main;
 import domainLayer.dataStructure.Media;
 
 import javax.swing.*;
@@ -80,7 +79,7 @@ public class WatchItUI {
         menuBar.add(searchField);
         JButton searchButton = new JButton("søg");
         searchButton.addActionListener(e -> {
-            Main.updateUI();
+            updateGallery();
         });
         menuBar.add(searchButton);
         frame.getRootPane().setDefaultButton(searchButton);
@@ -110,10 +109,20 @@ public class WatchItUI {
 
         frame.add(detailsView);
 
+        frame.setVisible(false);
         frame.setVisible(true);
     }
+    public void goToGalleryView(){
+        frame.remove(detailsView);
 
-    public void updateGallery(ArrayList<Media> medias) {
+        frame.add(galleryScrollPane);
+
+        updateGallery();
+    }
+
+
+    public void updateGallery() {
+        ArrayList<Media> medias = Main.db.filterMedia(getSelectedTypes(), getSelectedGenres(), getSelectedRating(), getSelectedYear(), getSelectedSortBy(), getSelectedSortByDirection(), getSearchTerm());
         gallery.updatePanels(medias);
         frame.setVisible(true);
     }
@@ -128,7 +137,7 @@ public class WatchItUI {
         sortByDropDown.resetSelected();
         sortByDirectionDropDown.resetSelected();
 
-        Main.updateUI();
+        updateGallery();
     }
 
 

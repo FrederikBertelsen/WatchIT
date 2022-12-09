@@ -1,6 +1,5 @@
 package presentationLayer;
 
-import domainLayer.Main;
 import domainLayer.dataStructure.Media;
 
 import javax.swing.*;

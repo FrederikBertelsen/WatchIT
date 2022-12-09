@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DetailsView extends JPanel {
+
     public DetailsView() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -64,11 +65,16 @@ public class DetailsView extends JPanel {
         JButton playButton = new JButton("    Afspil    ");
         playButton.setFont(new Font("", Font.PLAIN, 40));
         addToPanel(playButton);
+        playButton.addActionListener(e -> {
+            Main.play(media);
+        });
 
         JButton backButton = new JButton("   Tilbage   ");
         backButton.setFont(new Font("", Font.PLAIN, 40));
         addToPanel(backButton);
-
+        backButton.addActionListener(e -> {
+            Main.goToGalleryView();
+        });
 //        JButton backButton = new JButton("Tilbage");
 //        add(backButton, BorderLayout.CENTER);
 

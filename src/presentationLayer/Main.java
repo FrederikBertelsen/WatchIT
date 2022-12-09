@@ -1,9 +1,8 @@
-package domainLayer;
+package presentationLayer;
 
+import domainLayer.DataBase;
+import domainLayer.DataBaseImpl;
 import domainLayer.dataStructure.Media;
-import presentationLayer.WatchItUI;
-
-import java.util.ArrayList;
 
 public class Main {
     public static WatchItUI ui;
@@ -13,7 +12,7 @@ public class Main {
         ui = new WatchItUI("WatchIT");
         db = new DataBaseImpl();
 
-        updateUI();
+        ui.updateGallery();
 
 //        ArrayList<Media> test = new ArrayList<>();
 //        Collections.addAll(test,db.getShows());
@@ -36,12 +35,14 @@ public class Main {
 
     }
 
-    public static void updateUI() {
-        ArrayList<Media> medias = db.filterMedia(ui.getSelectedTypes(), ui.getSelectedGenres(), ui.getSelectedRating(), ui.getSelectedYear(), ui.getSelectedSortBy(), ui.getSelectedSortByDirection(), ui.getSearchTerm());
-        ui.updateGallery(medias);
+    public static void goToGalleryView() {
+        ui.goToGalleryView();
     }
-
     public static void goToDetailsView(Media media) {
         ui.goToDetailsView(media);
+    }
+
+    public static void play(Media media){
+        System.out.println("Playing: " + media.getTitle());
     }
 }
