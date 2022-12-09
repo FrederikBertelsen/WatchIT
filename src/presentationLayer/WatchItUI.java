@@ -117,6 +117,7 @@ public class WatchItUI {
 
         frame.add(galleryScrollPane);
 
+        frame.setVisible(false);
         updateGallery();
     }
 
