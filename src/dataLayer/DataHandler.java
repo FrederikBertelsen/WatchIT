@@ -13,7 +13,7 @@ public interface DataHandler {
 
     /*kaster en exception hvis den ikke kan oprette en tempfil til favorites/ normal fil til favorites.
     Dette er nødvendigt for at den kan opdatere txt filen eller oprette den hvis den ikke existerer endnu.
-    Dette burde ikke ske medmindre brugeren har den lokation låst på en måde hvor den ikke kan slettes da funktionen også forsøger dette
+    Dette burde ikke ske medmindre brugeren har den lokation låst på en måde hvor den ikke kan slettes da metoden også forsøger dette
      */
     void addFavorite(String data) throws FavoriteAddRemoveException,IOException;
 

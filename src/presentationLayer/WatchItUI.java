@@ -117,13 +117,13 @@ public class WatchItUI {
 
         frame.add(galleryScrollPane);
 
-        frame.setVisible(false);
+        frame.setVisible(true);
         updateGallery();
     }
 
 
     public void updateGallery() {
-        ArrayList<Media> medias = Main.db.filterMedia(getSelectedTypes(), getSelectedGenres(), getSelectedRating(), getSelectedYear(), getSelectedSortBy(), getSelectedSortByDirection(), getSearchTerm());
+        ArrayList<Media> medias = Main.filterMedia(getSelectedTypes(), getSelectedGenres(), getSelectedRating(), getSelectedYear(), getSelectedSortBy(), getSelectedSortByDirection(), getSearchTerm());
         gallery.updatePanels(medias);
         frame.setVisible(true);
     }

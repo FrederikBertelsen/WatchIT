@@ -6,41 +6,55 @@ import java.util.*;
 
 public class StringMatcher {
 
-    //Udregner den mindste score et match skal have for at blive vist på skærmen.
+    // Beregner minimumsscoren for en given søgeterm
     private static double calcMinimumScore(String searchTerm) {
         return 1.0 * searchTerm.length() / 1.2;
     }
 
 
+    // Finder matchende medier for en given søgeterm
     public static ArrayList<Media> getMatches(String searchTerm, ArrayList<Media> medias) {
+        // Konverterer søgetermen til lower case
         searchTerm = searchTerm.toLowerCase();
 
+        // Beregner minimumsscoren
         double minimumScore = calcMinimumScore(searchTerm);
 
-        ArrayList<Map.Entry<Media, Integer>> matchedMedias = new ArrayList<>();
+        // Liste til matchende medier
+        ArrayList<MediaScore> matchedMedias = new ArrayList<>();
+
+        // Gennemgår alle medier og finder matchende medier
         for (Media media : medias) {
             String mediaName = media.getTitle().toLowerCase();
             int score = calcStringMatch(searchTerm, mediaName);
 
+            // Tilføjer mediet til listen, hvis scoren er større eller lig med minimumsscoren
             if (score >= minimumScore) {
-                matchedMedias.add(new AbstractMap.SimpleEntry<>(media, score));
+                matchedMedias.add(new MediaScore(media, score));
             }
         }
 
-        matchedMedias.sort(Map.Entry.comparingByValue());
+        // Sorterer listen af matchende medier efter score
+        matchedMedias.sort(Comparator.comparing(MediaScore::getScore));
 
+        // Liste til output
         ArrayList<Media> output = new ArrayList<>();
-        for (Map.Entry<Media, Integer> entry : matchedMedias) {
 
-            System.out.println(entry.getKey().getTitle() + ": " + entry.getValue());
-            output.add(entry.getKey());
+        // Gennemgår alle matchende medier og tilføjer dem til output-listen
+        for (MediaScore mediaScore : matchedMedias) {
+            output.add(mediaScore.getMedia());
         }
-        System.out.println();
 
+        // Returnerer listen af matchende medier
         return output;
     }
 
+    // Denne metode beregner en match-score for to givet strenge.
+    // Match-scoret er et tal, der repræsenterer, hvor godt de to strenge passer sammen.
+    // Jo højere match-score, jo bedre passer strenge sammen.
     private static int calcStringMatch(String stringA, String stringB) {
+        // Lav longString og shortString variabler for at holde styr på,
+        // hvilken af de to strenge, der er den længste og den korteste.
         String longString;
         String shortString;
         if (stringA.length() > stringB.length()) {
@@ -50,44 +64,62 @@ public class StringMatcher {
             longString = stringB;
             shortString = stringA;
         }
-        int extraLength = longString.length() - shortString.length();
-
+        // Find forskellen i længde mellem de to strenge.
+        int lengthDiff = longString.length() - shortString.length();
+        // Hvis den lange streng indeholder den korte streng, så returner det højeste mulige match-score (Integer.MAX_VALUE).
         if (longString.contains(shortString)) {
-            return shortString.length() * 3;
+            return Integer.MAX_VALUE;
         }
-        // if there is no extra length,
-        if (extraLength == 0) {
+        // Hvis længden på de to strenge er den samme, så beregn match-scoren ved hjælp af calcStringLikeness metoden.
+        if (lengthDiff == 0) {
             return calcStringLikeness(longString, shortString);
         }
-
-        int highScore = 0;
-        for (int i = 0; i < extraLength; i++) {
+        // For hver mulig sub-streng af den lange streng, beregn match-scoren ved hjælp af calcStringLikeness metoden.
+        // Hvis den nye score er højere end den nuværende højesteScore, så opdater højesteScore til den nye score.
+        int highestScore = 0;
+        for (int i = 0; i < lengthDiff; i++) {
             int newScore = calcStringLikeness(longString.substring(i), shortString);
-            if (newScore > highScore) highScore = newScore;
+            if (newScore > highestScore) highestScore = newScore;
         }
-        return highScore;
+        // Returner den højesteScore, som er den bedste match-score for de to strenge.
+        return highestScore;
     }
 
-    private static int calcStringLikeness(String stringA, String stringB) {
+    // metoden calcStringLikeness() tager to strenge (longString og shortString) som input,
+// og returnerer en score, der afspejler hvor tæt de to strenge matcher hinanden.
+    private static int calcStringLikeness(String longString, String shortString) {
+// scoren starter på 0
         int score = 0;
-
-        if (stringA.charAt(0) == stringB.charAt(0)) {
+        // Hvis de første bogstaver i de to strenge er ens, så øges scoren med 2, da der er et bogstavs-match
+        if (longString.charAt(0) == shortString.charAt(0)) {
             score += 2;
 
-            if (stringA.length() == 1 || stringB.length() == 1) return score;
+            // Hvis enten longString eller shortString kun har et bogstav, så returneres scoren
+            if (longString.length() == 1 || shortString.length() == 1) return score;
 
-            score += calcStringLikeness(stringA.substring(1), stringB.substring(1));
-        } else if (stringB.length() > 1 && stringA.charAt(0) == stringB.charAt(1)) {
-            score += 0;
-            score += calcStringLikeness(stringA, stringB.substring(1));
-        } else if (stringA.length() > 1 && stringA.charAt(1) == stringB.charAt(0)) {
-            score += 0;
-            score += calcStringLikeness(stringA.substring(1), stringB);
-        } else if (stringA.length() == 1 || stringB.length() == 1) {
+            // Ellers, beregnes scoren for de resterende dele af de to strenge ved at kalde
+            // calcStringLikeness() rekursivt.
+            score += calcStringLikeness(longString.substring(1), shortString.substring(1));
+        }
+        // hvis det første bogstav i longString er det samme som det andet bogstav i shortString,
+        // så kalder calcStringLikeness() rekursivt med de 2 stregne, uden det første bogstav i shortString.
+        else if (shortString.length() > 1 && longString.charAt(0) == shortString.charAt(1)) {
+            score += calcStringLikeness(longString, shortString.substring(1));
+        }
+        // hvis det første bogstav i shortString er det samme som det andet bogstav i longString,
+        // så kalder calcStringLikeness() rekursivt med de 2 stregne, uden det første bogstav i longString.
+        else if (longString.length() > 1 && longString.charAt(1) == shortString.charAt(0)) {
+            score += calcStringLikeness(longString.substring(1), shortString);
+        }
+        // Hvis en af strengende er 1 bogstav lang, returneres scoren, da vi ikke kan finde flere bogstavs-matches
+        else if (longString.length() == 1 || shortString.length() == 1) {
             return score;
-        } else {
+        }
+        // Hvis der ikke er noget bogstavs-match, falder scoren med 3,
+        // og calcStringLikeness() kalder sig selv uden det første bogstav i hver streng.
+        else {
             score -= 3;
-            score += calcStringLikeness(stringA.substring(1), stringB.substring(1));
+            score += calcStringLikeness(longString.substring(1), shortString.substring(1));
         }
 
         return score;
