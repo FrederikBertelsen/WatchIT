@@ -28,6 +28,9 @@ public abstract class Media {
     public double getRating() {
         return rating;
     }
+    public String getRatingString() {
+        return String.valueOf(rating).replace(".",",");
+    }
 
     public HashSet<String> getGenres() {
         return genres;
@@ -44,7 +47,10 @@ public abstract class Media {
         return image;
     }
 
-    public boolean getFavorited(){
+    public boolean isFavorited(){
         return favorited;
+    }
+    public void setFavorite(boolean value){
+        favorited = value;
     }
 }

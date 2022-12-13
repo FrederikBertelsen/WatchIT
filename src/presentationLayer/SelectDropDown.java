@@ -1,6 +1,7 @@
 package presentationLayer;
 
 import javax.swing.*;
+import java.awt.*;
 
 // Dette er en abstrakt klasse, der udvider JMenu for at lave en dropdown-menu
 public abstract class SelectDropDown extends JMenu {
@@ -23,6 +24,7 @@ public abstract class SelectDropDown extends JMenu {
 
     // Denne metode nulstiller valget af valgmuligheder i dropdown-menuen
     public void resetSelected() {
+
         // For hvert element i dropdown-menuen
         for (JMenuItem menuItem : menuItems) {
             // Fravælg det
@@ -30,8 +32,7 @@ public abstract class SelectDropDown extends JMenu {
         }
     }
 
-    // Returnerer navnene på elementerne i dropdown-menuen
-    public String[] getItemNames() {
-        return itemNames;
+    public int getItemCount(){
+        return menuItems.length;
     }
 }

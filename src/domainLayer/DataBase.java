@@ -13,14 +13,21 @@ public interface DataBase {
 
     Show[] getShows();
 
-    void movieLoader(ArrayList<String> movieStrings) throws IOException;
+    Movie[] movieSerializer(ArrayList<String> moviesStrings) throws IOException;
+    Movie[] movieSerializer(ArrayList<String> moviesStrings, HashSet<String> favorites) throws IOException;
 
-    void showLoader(ArrayList<String> showStrings) throws IOException;
+    Show[] showSerializer(ArrayList<String> showStrings) throws IOException;
+    Show[] showSerializer(ArrayList<String> showStrings, HashSet<String> favorites) throws IOException;
 
-    ArrayList<Media> filterMedia(HashSet<String> types, HashSet<String> genres, String rating, String years, String sortBy, String sortByDirection, String SearchTerm);
+    ArrayList<Media> getFilteredMedia(SearchPreset searchPreset);
 
-    ArrayList<Media> getByType(HashSet<String> types);
-    ArrayList<Media> filterByGenre(ArrayList<Media> inputList, HashSet<String> genres);
-    ArrayList<Media> filterByRating(ArrayList<Media> inputList, double rating);
-    ArrayList<Media> filterByYear(ArrayList<Media> inputList, int yearStart, int yearEnd);
+    ArrayList<Media> getMediaByType(HashSet<String> types);
+    ArrayList<Media> filterByGenre(ArrayList<Media> mediaList, HashSet<String> genres);
+    ArrayList<Media> filterByRating(ArrayList<Media> mediaList, double rating);
+    ArrayList<Media> filterByYear(ArrayList<Media> mediaList, int yearStart, int yearEnd);
+
+    ArrayList<Media> filterByFavoritesOnly(ArrayList<Media> mediaList);
+
+    void addToFavorites(Media media);
+    void removeFromFavorites(Media media);
 }

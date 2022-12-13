@@ -1,5 +1,6 @@
 package presentationLayer;
 
+import domainLayer.SearchPreset;
 import domainLayer.dataStructure.Media;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ public class WatchItUI {
     private DetailsView detailsView;
 
     private JTextField searchField;
+    private JCheckBox favoritesOnly;
     private MultiSelectDropDown typeDropDown;
     private MultiSelectDropDown genreDropDown;
     private SingleSelectDropDown ratingDropDown;
@@ -38,33 +40,31 @@ public class WatchItUI {
         // set up the top bar
         menuBar = new JMenuBar();
         // filters
-        MultiSelectDropDown movieShowMenu = new MultiSelectDropDown("Type", movie_show);
-        menuBar.add(movieShowMenu);
-        typeDropDown = movieShowMenu;
+        typeDropDown = new MultiSelectDropDown("Type", movie_show);
+        menuBar.add(typeDropDown);
 
-        MultiSelectDropDown genreMenu = new MultiSelectDropDown("Genre", genres);
-        menuBar.add(genreMenu);
-        genreDropDown = genreMenu;
+        genreDropDown = new MultiSelectDropDown("Genre", genres);
+        menuBar.add(genreDropDown);
 
-        SingleSelectDropDown ratingMenu = new SingleSelectDropDown("Rating", ratings);
-        menuBar.add(ratingMenu);
-        ratingDropDown = ratingMenu;
+        ratingDropDown = new SingleSelectDropDown("Rating", ratings);
+        menuBar.add(ratingDropDown);
 
-        SingleSelectDropDown yearMenu = new SingleSelectDropDown("Årstal", years);
-        menuBar.add(yearMenu);
-        yearDropDown = yearMenu;
+        yearDropDown = new SingleSelectDropDown("Årstal", years);
+        menuBar.add(yearDropDown);
 
-        SingleSelectDropDown sortByMenu = new SingleSelectDropDown("Sorter Efter", sortBy);
-        // sort by title by default
-        sortByMenu.getItem(1).getModel().setSelected(true);
-        menuBar.add(sortByMenu);
-        sortByDropDown = sortByMenu;
+        sortByDropDown = new SingleSelectDropDown("Sorter Efter", sortBy);
+        // sort by title, by default
+        sortByDropDown.getItem(1).getModel().setSelected(true);
+        menuBar.add(sortByDropDown);
 
-        SingleSelectDropDown sortByDirectionMenu = new SingleSelectDropDown("Sorter Retning", sortByDirections);
-        // sort by Descending by default
-        sortByDirectionMenu.getItem(1).getModel().setSelected(true);
-        menuBar.add(sortByDirectionMenu);
-        sortByDirectionDropDown = sortByDirectionMenu;
+        sortByDirectionDropDown = new SingleSelectDropDown("Sorter Retning", sortByDirections);
+        // sort by Descending, by default
+        sortByDirectionDropDown.getItem(1).getModel().setSelected(true);
+        menuBar.add(sortByDirectionDropDown);
+
+        // search only favorites
+        favoritesOnly = new JCheckBox("Kun favorit");
+        menuBar.add(favoritesOnly);
 
         // reset button
         JButton resetButton = new JButton("Nulstil filtre");
@@ -82,8 +82,8 @@ public class WatchItUI {
             updateGallery();
         });
         menuBar.add(searchButton);
+        // når brugeren klikker 'ENTER' i programmet, klikker programmet på søge knappen
         frame.getRootPane().setDefaultButton(searchButton);
-
 
         frame.setJMenuBar(menuBar);
 
@@ -95,11 +95,11 @@ public class WatchItUI {
         // create details view
         detailsView = new DetailsView();
 
-//        frame.setLocationRelativeTo(null);
-        frame.setSize(1920 / 2, 1080 / 2);
-        frame.setVisible(true);
-//        frame.setLayout(new GridLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1150, 800);
+//        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     public void goToDetailsView(Media media){
@@ -123,13 +123,15 @@ public class WatchItUI {
 
 
     public void updateGallery() {
-        ArrayList<Media> medias = Main.filterMedia(getSelectedTypes(), getSelectedGenres(), getSelectedRating(), getSelectedYear(), getSelectedSortBy(), getSelectedSortByDirection(), getSearchTerm());
-        gallery.updatePanels(medias);
+        SearchPreset searchPreset = new SearchPreset(getSelectedTypes(), getSelectedGenres(), getSelectedRating(), getSelectedYear(), getSelectedSortBy(), getSelectedSortByDirection(), getSearchTerm(), FavoritesOnly());
+        ArrayList<Media> foundMedia = Main.filterMedia(searchPreset);
+        gallery.updatePanels(foundMedia);
         frame.setVisible(true);
     }
 
     private void resetFilters() {
         searchField.setText("");
+        favoritesOnly.setSelected(false);
 
         typeDropDown.resetSelected();
         genreDropDown.resetSelected();
@@ -168,5 +170,9 @@ public class WatchItUI {
 
     public String getSearchTerm() {
         return searchField.getText();
+    }
+
+    public boolean FavoritesOnly(){
+        return favoritesOnly.isSelected();
     }
 }

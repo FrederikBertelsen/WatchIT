@@ -23,6 +23,12 @@ public class Show extends Media {
     public int getSeasonCount() {
         return seasons.length;
     }
+    public int getSeasonEpisodeCount(int seasonNumber) {
+        if (0 < seasonNumber && seasonNumber <= seasons.length){
+            return seasons[seasonNumber-1].getEpisodeCount();
+        }
+        return 0;
+    }
 
     @Override
     public String getYearString() {
@@ -30,5 +36,12 @@ public class Show extends Media {
             return super.getYearString() + " - " + toYear;
         }
         return super.getYearString() + " - NU   ";
+    }
+
+    public Season getSeason(int number) {
+        if (0 < number && number <= seasons.length){
+            return seasons[number];
+        }
+        return new Season(0, new Episode[]{});
     }
 }

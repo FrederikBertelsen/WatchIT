@@ -1,9 +1,13 @@
 package presentationLayer;
 
+import dataLayer.FavoriteAddRemoveException;
 import domainLayer.DataBase;
 import domainLayer.DataBaseImpl;
+import domainLayer.SearchPreset;
 import domainLayer.dataStructure.Media;
+import domainLayer.dataStructure.Playable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -35,14 +39,21 @@ public abstract class Main {
     }
 
     // Denne metode afspiller et bestemt medie.
-    public static void play(Media media) {
-        // Udskriv en besked i konsollen, der viser, at det angivne medie afspilles.
-        System.out.println("Afspiller: " + media.getTitle());
+    public static void play(Media media, Playable playable) {
+        playable.play();
     }
 
     // Denne Metoden returnerer en liste af medier, der opfylder filtreringskriterierne.
     // Filtreringskriterierne inkluderer typer, genrer, rating, år, sortering og søgeord.
-    public static ArrayList<Media> filterMedia(HashSet<String> types, HashSet<String> genres, String rating, String years, String sortBy, String sortByDirection, String searchTerm) {
-        return db.filterMedia(types, genres, rating, years, sortBy, sortByDirection, searchTerm);
+    public static ArrayList<Media> filterMedia(SearchPreset searchPreset) {
+        return db.getFilteredMedia(searchPreset);
+    }
+
+    public static void addFavorite(Media media) {
+        db.addToFavorites(media);
+    }
+
+    public static void removeFavorite(Media media) {
+        db.removeFromFavorites(media);
     }
 }

@@ -25,7 +25,7 @@ public class FavoritesDataTest {
         filePath = "data/favorites.txt";
         dataHandler = new DataHandlerImpl(filePath);
         try {
-            data = dataHandler.load();
+            data = dataHandler.loadData();
         } catch (FileNotFoundException e){
             System.out.println("No existing favorites file");
         }
@@ -42,8 +42,8 @@ public class FavoritesDataTest {
         File file = new File(filePath);
         file.delete();
         try {
-            dataHandler.addFavorite("Rear Window");
-            data = dataHandler.load();
+            dataHandler.addFromFile("Rear Window");
+            data = dataHandler.loadData();
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -64,8 +64,8 @@ public class FavoritesDataTest {
     public void saveFavoriteAddToExistingTest() {
         if(!new File(filePath).exists()) System.out.println("no existing file so save to existing doesn't really work");
         try {
-            dataHandler.addFavorite("The Maltese Falcon");
-            dataHandler.addFavorite("Homeland");
+            dataHandler.addFromFile("The Maltese Falcon");
+            dataHandler.addFromFile("Homeland");
         } catch (IOException e){}
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
@@ -76,9 +76,9 @@ public class FavoritesDataTest {
     public void saveFavoriteRemoveTest(){
 
         try {
-            dataHandler.addFavorite("Twin peaks");
-            dataHandler.removeFavorite("Twin peaks");
-            dataHandler.removeFavorite("Rear Window");
+            dataHandler.addFromFile("Twin peaks");
+            dataHandler.removeFromFile("Twin peaks");
+            dataHandler.removeFromFile("Rear Window");
         } catch (IOException e){}
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());

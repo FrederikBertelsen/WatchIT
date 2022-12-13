@@ -8,7 +8,7 @@ import java.awt.*;
 /*
 Klassen GalleryPanel bruges til at oprette et panel, der indeholder data om et specifik Media-instans.
 Det viser titlen, genren, ratingen, årstallet og et billede af mediet.
-Derudover indeholder det en knap, der, når den trykkes på, åbner detaljevisningen af mediet i programmet.
+Derudover indeholder det en knap, der, når den trykkes på, åbner detalje-visningen af mediet i programmet.
 */
 public class GalleryPanel extends JPanel {
     // media er den specifikke Media-instans, som skal vises i dette GalleryPanel-objekt
@@ -28,10 +28,10 @@ public class GalleryPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // sætter baggrundsfarven for dette panel til at være lightGray
-        setBackground(Color.lightGray);
+//        setBackground(Color.lightGray);
 
         // sætter en bevelBorder på dette panel
-        setBorder(BorderFactory.createBevelBorder(0));
+        setBorder(BorderFactory.createBevelBorder(1));
 
         // opretter et label med Media-objektets billede
         JLabel picture = new JLabel(new ImageIcon(media.getImage()));
@@ -60,13 +60,27 @@ public class GalleryPanel extends JPanel {
         addToPanel(year);
 
         // opretter en knap der går til "DetailsView" siden i programmet når man klikker på den
-        JButton detailsButton = new JButton("View Details");
+        JButton detailsButton = new JButton("Se Info");
         detailsButton.addActionListener(e -> {
             Main.goToDetailsView(media);
         });
         addToPanel(detailsButton);
+
+        // opretter en favorit knap der tilføjer mediet til favorit listen hvis den bliver selected
+        JCheckBox favoriteButton = new JCheckBox("Favorit");
+        favoriteButton.addActionListener(e -> {
+            if (favoriteButton.isSelected()){
+                Main.addFavorite(media);
+            } else {
+                Main.removeFavorite(media);
+            }
+        });
+        // hvis mediet er en favorit, vis det i UIet
+        favoriteButton.setSelected(media.isFavorited());
+        addToPanel(favoriteButton);
     }
-    // Tilgøjer en component, sætter dens alignment så den bliver vist i midten programmet,
+
+    // Tilføjer et komponent, sætter dens alignment så den bliver vist i midten programmet,
     // og tilføjer den til GalleryPanel-objektet
     private void addToPanel(JComponent label){
         label.setAlignmentX(Component.CENTER_ALIGNMENT);

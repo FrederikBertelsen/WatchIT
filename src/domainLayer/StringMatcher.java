@@ -13,7 +13,7 @@ public class StringMatcher {
 
 
     // Finder matchende medier for en given søgeterm
-    public static ArrayList<Media> getMatches(String searchTerm, ArrayList<Media> medias) {
+    public static ArrayList<Media> getMatches(String searchTerm, ArrayList<Media> mediaList) {
         // Konverterer søgetermen til lower case
         searchTerm = searchTerm.toLowerCase();
 
@@ -21,27 +21,37 @@ public class StringMatcher {
         double minimumScore = calcMinimumScore(searchTerm);
 
         // Liste til matchende medier
-        ArrayList<MediaScore> matchedMedias = new ArrayList<>();
+        ArrayList<MediaScore> matchedMediaList = new ArrayList<>();
 
         // Gennemgår alle medier og finder matchende medier
-        for (Media media : medias) {
+        for (Media media : mediaList) {
             String mediaName = media.getTitle().toLowerCase();
-            int score = calcStringMatch(searchTerm, mediaName);
+
+            // Hvis medie titlen indeholder søge termet, så er der et perfect match. Og scoren bliver sat til den højeste mulige match-score (Integer.MAX_VALUE).
+            int score;
+            if (mediaName.contains(searchTerm)) {
+                score = Integer.MAX_VALUE;
+            } else {
+                score = calcStringMatch(searchTerm, mediaName);
+            }
 
             // Tilføjer mediet til listen, hvis scoren er større eller lig med minimumsscoren
             if (score >= minimumScore) {
-                matchedMedias.add(new MediaScore(media, score));
+                System.out.println(minimumScore);
+                System.out.println(mediaName);
+                System.out.println(score);
+                matchedMediaList.add(new MediaScore(media, score));
             }
         }
 
         // Sorterer listen af matchende medier efter score
-        matchedMedias.sort(Comparator.comparing(MediaScore::getScore));
+        matchedMediaList.sort(Comparator.comparing(MediaScore::getScore));
 
         // Liste til output
         ArrayList<Media> output = new ArrayList<>();
 
         // Gennemgår alle matchende medier og tilføjer dem til output-listen
-        for (MediaScore mediaScore : matchedMedias) {
+        for (MediaScore mediaScore : matchedMediaList) {
             output.add(mediaScore.getMedia());
         }
 
@@ -66,10 +76,6 @@ public class StringMatcher {
         }
         // Find forskellen i længde mellem de to strenge.
         int lengthDiff = longString.length() - shortString.length();
-        // Hvis den lange streng indeholder den korte streng, så returner det højeste mulige match-score (Integer.MAX_VALUE).
-        if (longString.contains(shortString)) {
-            return Integer.MAX_VALUE;
-        }
         // Hvis længden på de to strenge er den samme, så beregn match-scoren ved hjælp af calcStringLikeness metoden.
         if (lengthDiff == 0) {
             return calcStringLikeness(longString, shortString);

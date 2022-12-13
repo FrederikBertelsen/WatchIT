@@ -31,19 +31,30 @@ public class DataBaseImpl implements DataBase {
     // Stien til mappen med billeder af serieforsider
     private String showImageFolderPath = "data/serieforsider";
 
+
+    private DataHandler favoritesDataHandler;
+    private String favoritesPath = "data/favorites.txt";
+    private HashSet<String> favoritesSet;
+
     // Konstruktør, som initialiserer DataHandler-objekterne og indlæser film og serie data
     public DataBaseImpl() {
         // Opretter DataHandler-objekterne med de angivne stier
         movieDataHandler = new DataHandlerImpl(moviePath, movieImageFolderPath);
         showDataHandler = new DataHandlerImpl(showPath, showImageFolderPath);
 
+        favoritesDataHandler = new DataHandlerImpl(favoritesPath, true);
+
         try {
+            favoritesSet = new HashSet<>(favoritesDataHandler.loadData());
+
             // Indlæser data om film ved hjælp af movieDataHandler
             // og konvertere dataen til Movie-objekter
-            movieLoader(movieDataHandler.load());
+            movies = movieSerializer(movieDataHandler.loadData(), favoritesSet);
             // Indlæser data om tv-serier ved hjælp af showDataHandler
             // og konvertere dataen til Series-objekter
-            showLoader(showDataHandler.load());
+            shows = showSerializer(showDataHandler.loadData(), favoritesSet);
+
+
         } catch (FileNotFoundException e) {
             // Fejlmeddelelse, hvis filen med data om film eller tv-serier ikke findes
             System.out.println("Error in loading movie and show files: " + e.getMessage());
@@ -55,19 +66,22 @@ public class DataBaseImpl implements DataBase {
     }
 
     // Getter for arrayet med filmene
+    @Override
     public Movie[] getMovies() {
         return movies;
     }
 
     // Getter for arrayet med serierne
+    @Override
     public Show[] getShows() {
         return shows;
     }
 
     @Override
-    public void movieLoader(ArrayList<String> moviesStrings) throws IOException {
+    public Movie[] movieSerializer(ArrayList<String> moviesStrings, HashSet<String> favorites) throws IOException {
+
         // Opret en ny liste med Movie-objekter med samme størrelse som input-listen
-        movies = new Movie[moviesStrings.size()];
+        Movie[] output = new Movie[moviesStrings.size()];
         // For hver streng i input-listen, opret et nyt Movie-objekt baseret på værdierne i Strengen
         for (int i = 0; i < moviesStrings.size(); i++) {
             // Del Strengen op i en liste med forskellige dele af værdien adskilt af ";" eller "; "
@@ -94,19 +108,23 @@ public class DataBaseImpl implements DataBase {
                 System.out.println("Image for '" + title + "' not found!");
             }
 
-            //TODO: add favorited functionality
-
+            boolean isFavorite = favorites.contains(title);
             // opretter et Movie-objekt med den konverterede data.
-            Movie movie = new Movie(title, year, genres, rating, image, false);
+            Movie movie = new Movie(title, year, genres, rating, image, isFavorite);
             // tilføj det nye objekt til databasens Movie-array
-            movies[i] = movie;
+            output[i] = movie;
         }
-    }
 
+        return output;
+    }
     @Override
-    public void showLoader(ArrayList<String> showStrings) throws IOException {
+    public Movie[] movieSerializer(ArrayList<String> moviesStrings) throws IOException {
+        return movieSerializer(moviesStrings, new HashSet<>());
+    }
+    @Override
+    public Show[] showSerializer(ArrayList<String> showStrings, HashSet<String> favorites) throws IOException {
         // Opret en ny liste med Show-objekter med samme størrelse som input-listen
-        shows = new Show[showStrings.size()];
+        Show[] output = new Show[showStrings.size()];
         // For hver streng i input-listen, opret et nyt Show-objekt baseret på værdierne i Strengen
         for (int i = 0; i < showStrings.size(); i++) {
             // Del Strengen op i en liste med forskellige dele af værdien adskilt af ";" eller "; "
@@ -148,7 +166,7 @@ public class DataBaseImpl implements DataBase {
                 Episode[] episodes = new Episode[episodeCount];
                 // opret et Episode-object med episode nummer, og indsæt Episode-Objektet i sæsonens episode-array
                 for (int k = 0; k < episodeCount; k++) {
-                    Episode newEpisode = new Episode(i);
+                    Episode newEpisode = new Episode(seasonNumber, i);
                     episodes[k] = newEpisode;
                 }
                 // Opret et nyt Season-objekt med sæson nummer og episode-array
@@ -163,55 +181,62 @@ public class DataBaseImpl implements DataBase {
                 System.out.println("Image for '" + title + "' not found!");
             }
 
-            // TODO: create favorited functionality
+            boolean isFavorite = favorites.contains(title);
             // opretter et Show-objekt med den konverterede data.
-            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image, false);
+            Show show = new Show(title, releaseYear, toYear, genres, rating, seasons, image, isFavorite);
             // tilføj det nye objekt til databasens Show-array
-            shows[i] = show;
+            output[i] = show;
         }
 
-    }
+        return output;
 
+    }
+    public Show[] showSerializer(ArrayList<String> showStrings) throws IOException {
+        return showSerializer(showStrings, new HashSet<>());
+    }
     @Override
-    public ArrayList<Media> filterMedia(HashSet<String> types, HashSet<String> genres, String rating, String years, String sortBy, String sortByDirection, String searchTerm) {
+    public ArrayList<Media> getFilteredMedia(SearchPreset searchPreset) {
         // Opret en liste med media, som matcher de angivne typer (hvis ingen typer er valgt, bliver alle medier taget med)
-        ArrayList<Media> output = getByType(types);
+        ArrayList<Media> output = getMediaByType(searchPreset.getTypes());
+
+        // Filtrer listen med media, så den kun indeholder favoritter (hvis brugeren kun vil se favoritter)
+        if (searchPreset.FavoritesOnly()){
+            output = filterByFavoritesOnly(output);
+        }
 
         // Filtrer listen med media, så den kun indeholder de angivne genrer
-        output = filterByGenre(output, genres);
+        output = filterByGenre(output, searchPreset.getGenres());
         // Hvis der er angivet en rating, så filtrer listen med media, så den kun indeholder media med den angivne rating eller højere
-        if (!rating.equals("")) {
-            double ratingDouble = Double.parseDouble(rating.substring(1));
+        if (!searchPreset.getRatingString().equals("")) {
+            double ratingDouble = Double.parseDouble(searchPreset.getRatingString().substring(1));
             output = filterByRating(output, ratingDouble);
         }
         // Hvis der er angivet et årsinterval, så filtrer listen med medier, så den kun indeholder media fra det angivne årsinterval
-        if (!years.equals("")) {
-            String[] yearParts = years.split("-");
+        if (!searchPreset.getYearsString().equals("")) {
+            String[] yearParts = searchPreset.getYearsString().split("-");
             int yearFrom = Integer.parseInt(yearParts[0].strip());
             int yearTo = Integer.parseInt(yearParts[1].strip());
             output = filterByYear(output, yearFrom, yearTo);
         }
         // Hvis der er angivet et søgeord, så filtrer listen med media, så den kun indeholder media, hvor media-titlen matcher søgeordet tilpas nok (se StringMatcher klassen)
         // StringMatcher klasses sorterer også medierne efter mediernes match-score
-        if (!searchTerm.equals("")) {
-            output = StringMatcher.getMatches(searchTerm, output);
+        if (!searchPreset.getSearchTerm().equals("")) {
+            output = StringMatcher.getMatches(searchPreset.getSearchTerm(), output);
         }
-        // hvis der ikke er angivet et søgeterm, så brug det valgte sorteringsmåde.
-        // det er så listen med medier ikke bliver sorteret mere end en gang hver gang metoden kører
+        // Hvis der ikke er angivet et søgeterm, så brug det valgte sorteringsmåde.
+        // Det er så listen med medier ikke bliver sorteret mere end en gang hver gang metoden kører
         else {
             // Hvis der er angivet en sorteringsmåde, så sorter listen med media efter den angivne måde
-            if (!sortBy.equals("")) {
-                if (sortBy.equals("Titel")) {
-                    output.sort(Comparator.comparing(Media::getTitle));
-                } else if (sortBy.equals("Rating")) {
-                    output.sort(Comparator.comparing(Media::getRating));
-                } else if (sortBy.equals("Årstal")) {
-                    output.sort(Comparator.comparing(Media::getYear));
+            if (!searchPreset.getSortBy().equals("")) {
+                switch (searchPreset.getSortBy()) {
+                    case "Titel" -> output.sort(Comparator.comparing(Media::getTitle));
+                    case "Rating" -> output.sort(Comparator.comparing(Media::getRating));
+                    case "Årstal" -> output.sort(Comparator.comparing(Media::getYear));
                 }
             }
 
             // Hvis der er angivet en sorteringsretning, så vend rækkefølgen af listen med media, hvis retningen er "faldende"
-            if (sortByDirection.equals("Faldende")) {
+            if (searchPreset.getSortByDirection().equals("Faldende")) {
                 Collections.reverse(output);
             }
         }
@@ -221,7 +246,7 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
-    public ArrayList<Media> getByType(HashSet<String> types) {
+    public ArrayList<Media> getMediaByType(HashSet<String> types) {
         ArrayList<Media> output = new ArrayList<>();
         // hvis ingen type er valgt, tilføj alle film og serier
         if (types.size() == 0) {
@@ -241,14 +266,14 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
-    public ArrayList<Media> filterByGenre(ArrayList<Media> inputList, HashSet<String> genres) {
+    public ArrayList<Media> filterByGenre(ArrayList<Media> mediaList, HashSet<String> genres) {
         // hvis ingen genre er valgt, skal ingen medier sorteres fra.
-        if (genres.size() == 0) return inputList;
+        if (genres.size() == 0) return mediaList;
 
         ArrayList<Media> output = new ArrayList<>();
 
         // for hver medie, hvis mediet indeholder alle de valgte genre bliver det tilføjet til output-listen
-        for (Media media : inputList) {
+        for (Media media : mediaList) {
             boolean match = true;
             for (String genre : genres) {
                 if (!media.getGenres().contains(genre)) {
@@ -266,11 +291,11 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
-    public ArrayList<Media> filterByRating(ArrayList<Media> inputList, double rating) {
+    public ArrayList<Media> filterByRating(ArrayList<Media> mediaList, double rating) {
         ArrayList<Media> output = new ArrayList<>();
 
         // for hver medie, hvis mediets rating er højere eller det samme som den valgte rating, tilføjes mediet til output-listen
-        for (Media media : inputList) {
+        for (Media media : mediaList) {
             if (media.getRating() >= rating) {
                 output.add(media);
             }
@@ -280,11 +305,11 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
-    public ArrayList<Media> filterByYear(ArrayList<Media> inputList, int yearStart, int yearEnd) {
+    public ArrayList<Media> filterByYear(ArrayList<Media> mediaList, int yearStart, int yearEnd) {
         ArrayList<Media> output = new ArrayList<>();
 
         // Hvis mediets udgivelse er inden for det angivne interval, skal det tilføjes til output-listen
-        for (Media media : inputList) {
+        for (Media media : mediaList) {
             if (yearStart <= media.getYear() && media.getYear() <= yearEnd) {
                 output.add(media);
             }
@@ -292,5 +317,37 @@ public class DataBaseImpl implements DataBase {
 
         return output;
     }
+    @Override
+    public ArrayList<Media> filterByFavoritesOnly(ArrayList<Media> mediaList) {
+        ArrayList<Media> output = new ArrayList<>();
 
+        // for hver medie, hvis mediets er en favorit, tilføjes mediet til output-listen
+        for (Media media : mediaList) {
+            if (media.isFavorited()) {
+                output.add(media);
+            }
+        }
+
+        return output;
+    }
+
+    @Override
+    public void addToFavorites(Media media) {
+        media.setFavorite(true);
+        try {
+            favoritesDataHandler.addFromFile(media.getTitle());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeFromFavorites(Media media) {
+        media.setFavorite(false);
+        try {
+            favoritesDataHandler.removeFromFile(media.getTitle());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

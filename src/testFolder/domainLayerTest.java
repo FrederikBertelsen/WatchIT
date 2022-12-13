@@ -23,9 +23,9 @@ public class domainLayerTest {
     @Test
     public void getTitleTest() throws IOException {
         DataHandlerImpl movieDataHandler = new DataHandlerImpl("data/film.txt");
-        ArrayList<String> load = movieDataHandler.load();
+        ArrayList<String> load = movieDataHandler.loadData();
 
-        dataBase.movieLoader(load);
+        dataBase.movieSerializer(load);
 
         Movie[] movies = dataBase.getMovies();
         int i = 1;
@@ -41,7 +41,7 @@ public class domainLayerTest {
         moviesInputStrings.add("Forrest Gump; 1994; Drama, Romance; 8,8;");
 
         //dataBase = new DataBaseImpl();
-        dataBase.movieLoader(moviesInputStrings);
+        dataBase.movieSerializer(moviesInputStrings);
         Movie[] movies = dataBase.getMovies();
 
         for (int i = 0; i < movies.length; i++) {
@@ -50,7 +50,7 @@ public class domainLayerTest {
 
             assertEquals(parts[0], currentMovie.getTitle());
             assertEquals(Integer.parseInt(parts[1]), currentMovie.getYear());
-            assertEquals(new ArrayList<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
+            assertEquals(new HashSet<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
             assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
         }
     }

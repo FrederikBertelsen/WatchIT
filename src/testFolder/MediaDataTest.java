@@ -45,7 +45,7 @@ public class MediaDataTest {
     @Test
     public  void getImageTest(){
         try {
-            data = dataHandler.load();
+            data = dataHandler.loadData();
         }catch (FileNotFoundException e){
             System.out.println(e.getMessage());
         }
@@ -66,7 +66,7 @@ public class MediaDataTest {
         filePath = "data/film.txt";
         dataHandler = new DataHandlerImpl(filePath, "data/filmplakater");
         try {
-            data = dataHandler.load();
+            data = dataHandler.loadData();
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
         }
@@ -79,7 +79,7 @@ public class MediaDataTest {
         filePath = "data/serier.txt";
         dataHandler = new DataHandlerImpl(filePath, "data/serieforsider");
         try {
-            data = dataHandler.load();
+            data = dataHandler.loadData();
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
         }

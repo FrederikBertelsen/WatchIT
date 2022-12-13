@@ -1,11 +1,8 @@
 package presentationLayer;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 // Denne klasse udvider SelectDropDown klassen, for at lave en dropdown-menu hvor kun en valgmulighed kan være valgt ad gangen.
 public class SingleSelectDropDown extends SelectDropDown {
@@ -30,7 +27,7 @@ public class SingleSelectDropDown extends SelectDropDown {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Når dette object bliver valgt, kalder clearCheckBoxes-metoden med dette objekt som argument
-                    clearCheckBoxes(menuItem);
+                    clearSelected(menuItem);
                 }
             });
 
@@ -41,7 +38,7 @@ public class SingleSelectDropDown extends SelectDropDown {
 
     // Denne metode tager et JRadioButtonMenuItem-object som argument
     // Denne metode fravælger alle andre valgte valgmuligheder, så 2 valgmuligheder ikke kan være valgt på samme tid.
-    public void clearCheckBoxes(JRadioButtonMenuItem selectedMenuItem) {
+    public void clearSelected(JRadioButtonMenuItem selectedMenuItem) {
         // For hvert object i listen af menu-valmuligheder
         for (JMenuItem menuItem : menuItems) {
             // Hvis dette object ikke er det valgte objekt
@@ -64,5 +61,31 @@ public class SingleSelectDropDown extends SelectDropDown {
         }
         // Hvis ingen valgmuligheder er valgt, returner en tom tekststreng for at vise at ingen valgmuligheder er valgt
         return "";
+    }
+
+
+    public void changeMenuItems(String[] itemNames){
+        // fjerner alle under-objekter (alle valgmuligheder)
+        removeAll();
+
+        // Opret en liste af JRadioButtonMenuItem objekter med samme længde som liste af valgmuligheder
+        menuItems = new JRadioButtonMenuItem[itemNames.length];
+        // For hvert valgmulighed
+        for (int i = 0; i < itemNames.length; i++) {
+            // Opret et nyt JRadioButtonMenuItem med navnet på dette objekt
+            JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(itemNames[i]);
+            // Tilføj dette objekt til listen af menu-valgmuligheder
+            menuItems[i] = menuItem;
+
+            // Tilføj en ActionListener til dette object, så programmet kan reagere, når det bliver klikket på
+            // det er så det kan fravælge alle andre valgte valgmuligheder
+            menuItem.addActionListener(e -> {
+                // Når dette object bliver valgt, kalder clearCheckBoxes-metoden med dette objekt som argument
+                clearSelected(menuItem);
+            });
+
+            // Tilføj dette object til menuen
+            add(menuItem);
+        }
     }
 }
