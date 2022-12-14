@@ -8,13 +8,13 @@ import java.awt.*;
 public abstract class DialogCreator {
     public static void createExceptionDialog(String message){
         JDialog dialog = createJDialog(message);
-        dialog.setTitle("ERROR");
+        dialog.setTitle("FEJL");
         dialog.getContentPane().setBackground(Color.red);
     }
 
     public static void createWarningDialog(String message){
         JDialog dialog = createJDialog(message);
-        dialog.setTitle("WARNING");
+        dialog.setTitle("ADVARSEL");
         dialog.getContentPane().setBackground(Color.yellow);
 
     }
