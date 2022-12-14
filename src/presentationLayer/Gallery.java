@@ -23,13 +23,10 @@ import java.util.ArrayList;
      // Denne metode opdaterer GalleryPanel-objekterne i den nuværende array baseret på de givne mediefiler
      public void updatePanels(ArrayList<Media> mediaList){
          // Kald resetCurrentPanels-metoden med antallet af mediefiler som argument
-         resetCurrentPanels(mediaList.size());
+         clearCurrentPanels(mediaList.size());
 
          if (mediaList.size() == 0){
-             JLabel noMediaFoundLabel = new JLabel("Ingen medier passer til din søgning...");
-
-             noMediaFoundLabel.setFont(new Font("", Font.PLAIN, 50));
-             add(noMediaFoundLabel);
+             DialogCreator.createWarningDialog("Ingen medier passer til din søgning.");
              return;
          }
 
@@ -43,7 +40,7 @@ import java.util.ArrayList;
      }
      // denne metode fjerner alle de GalleryPanel-objekter der er i arrayet,
      // og sætter arrayets længde til den nye mængde af medier der skal være i brugergrænsefladen.
-     private void resetCurrentPanels(int newLength){
+     private void clearCurrentPanels(int newLength){
          // fjern alle de GalleryPanel-objekter der er i galleriet
          for(Component galleryPanel : getComponents()){
              remove(galleryPanel);

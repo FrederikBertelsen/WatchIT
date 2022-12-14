@@ -12,7 +12,7 @@ public class Episode implements Playable{
         return episodeNumber;
     }
     @Override
-    public void play() {
-        System.out.println("PLAYING: Season " + seasonNumber + " Episode " + episodeNumber);
+    public String getPath() {
+        return "Season " + seasonNumber + "/Episode " + episodeNumber + ".mp4";
     }
 }

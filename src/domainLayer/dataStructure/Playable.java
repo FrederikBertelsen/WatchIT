@@ -2,5 +2,5 @@ package domainLayer.dataStructure;
 
 
 public interface Playable {
-    public void play();
+    public String getPath();
 }

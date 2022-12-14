@@ -141,6 +141,11 @@ public class DetailsView extends JPanel {
 
         if (media instanceof Show) {
             Show show = (Show) media;
+
+            if (media.getTitle().equals(currentMedia.getTitle())){
+                episodeDropDown.changeMenuItems(new String[]{"-"});
+            }
+
             seasonEpisodeMenu.setVisible(true);
 
             String[] seasons = new String[show.getSeasonCount()];
@@ -158,7 +163,7 @@ public class DetailsView extends JPanel {
                     int seasonNumber = Integer.parseInt(seasonDropDown.getSelected());
                     int episodecount = show.getSeasonEpisodeCount(seasonNumber);
 
-                    if (episodeDropDown.getItemCount() != episodecount){
+                    if (episodeDropDown.getItemCount() != episodecount) {
                         String[] episodes = new String[episodecount];
                         for (int i = 0; i < episodecount; i++) {
                             episodes[i] = String.valueOf(i + 1);
@@ -182,11 +187,18 @@ public class DetailsView extends JPanel {
 
         }
 
-
         // Tilføjer en ny ActionListener til "Afspil" knappen så den afspiller den rigtige film når der bliver trykket på knappen.
         playButton.removeActionListener(playButtonActionListener);
         playButtonActionListener = (e -> {
-            Main.play(currentMedia, getCurrentPlayable());
+            Playable playable = null;
+            try {
+                playable = getCurrentPlayable();
+            } catch (Exception exception) {
+                DialogCreator.createWarningDialog("Du har ikke valgt en sæson og en episode.");
+            }
+            if (playable == null) return;
+
+            Main.play(currentMedia, playable);
         });
         playButton.addActionListener(playButtonActionListener);
     }
@@ -199,17 +211,21 @@ public class DetailsView extends JPanel {
         add(label);
     }
 
-    private Playable getCurrentPlayable(){
-        if (currentMedia instanceof Show){
-            Show show = (Show)currentMedia;
+    private Playable getCurrentPlayable() throws Exception {
+        if (currentMedia instanceof Show) {
+            Show show = (Show) currentMedia;
 
             int seasonNumber = Integer.parseInt(seasonDropDown.getSelected());
             int episodeNumber = Integer.parseInt(episodeDropDown.getSelected());
 
+            if (episodeNumber > show.getSeasonEpisodeCount(seasonNumber)){
+                throw new Exception("Episode er ikke valgt");
+            }
+
             return show.getSeason(seasonNumber).getEpisode(episodeNumber);
 
-        } else if (currentMedia instanceof Movie){
-            return (Movie)currentMedia;
+        } else if (currentMedia instanceof Movie) {
+            return (Movie) currentMedia;
         }
         return null;
     }

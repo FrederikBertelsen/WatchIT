@@ -97,7 +97,6 @@ public class WatchItUI {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1150, 800);
-//        frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -133,12 +132,12 @@ public class WatchItUI {
         searchField.setText("");
         favoritesOnly.setSelected(false);
 
-        typeDropDown.resetSelected();
-        genreDropDown.resetSelected();
-        ratingDropDown.resetSelected();
-        yearDropDown.resetSelected();
-        sortByDropDown.resetSelected();
-        sortByDirectionDropDown.resetSelected();
+        typeDropDown.clearSelected();
+        genreDropDown.clearSelected();
+        ratingDropDown.clearSelected();
+        yearDropDown.clearSelected();
+        sortByDropDown.clearSelected();
+        sortByDirectionDropDown.clearSelected();
 
         updateGallery();
     }

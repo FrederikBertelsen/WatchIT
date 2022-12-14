@@ -2,7 +2,9 @@ package domainLayer;
 
 import dataLayer.DataHandler;
 import dataLayer.DataHandlerImpl;
+import dataLayer.FavoriteAddRemoveException;
 import domainLayer.dataStructure.*;
+import presentationLayer.DialogCreator;
 
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
@@ -45,6 +47,7 @@ public class DataBaseImpl implements DataBase {
         favoritesDataHandler = new DataHandlerImpl(favoritesPath, true);
 
         try {
+            // indlæser listen af favoriter i et HashSet, så favoritter hurtigt kan checkes
             favoritesSet = new HashSet<>(favoritesDataHandler.loadData());
 
             // Indlæser data om film ved hjælp af movieDataHandler
@@ -57,10 +60,11 @@ public class DataBaseImpl implements DataBase {
 
         } catch (FileNotFoundException e) {
             // Fejlmeddelelse, hvis filen med data om film eller tv-serier ikke findes
-            System.out.println("Error in loading movie and show files: " + e.getMessage());
+            DialogCreator.createExceptionDialog("Fejl ved indlæsning af film og serie filer: /n" + e.getMessage());
+            System.out.println();
         } catch (IOException e) {
             // Fejlmeddelelse, hvis der opstår en fejl ved indlæsning af billeder af filmplakater eller serieforsider
-            System.out.println("Error in loading movie and show images: " + e.getMessage());
+            DialogCreator.createExceptionDialog("Fejl ved indlæsning af film og serie billeder: " + e.getMessage());
         }
 
     }
@@ -336,8 +340,8 @@ public class DataBaseImpl implements DataBase {
         media.setFavorite(true);
         try {
             favoritesDataHandler.addFromFile(media.getTitle());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (FavoriteAddRemoveException | IOException e) {
+            DialogCreator.createWarningDialog(e.getMessage());
         }
     }
 
@@ -346,8 +350,8 @@ public class DataBaseImpl implements DataBase {
         media.setFavorite(false);
         try {
             favoritesDataHandler.removeFromFile(media.getTitle());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (FavoriteAddRemoveException | IOException e) {
+            DialogCreator.createWarningDialog(e.getMessage());
         }
     }
 }

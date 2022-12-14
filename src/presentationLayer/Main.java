@@ -1,19 +1,18 @@
 package presentationLayer;
 
-import dataLayer.FavoriteAddRemoveException;
 import domainLayer.DataBase;
 import domainLayer.DataBaseImpl;
 import domainLayer.SearchPreset;
 import domainLayer.dataStructure.Media;
 import domainLayer.dataStructure.Playable;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public abstract class Main {
     private static WatchItUI ui;
     private static DataBase db;
+
+    private static VideoPlayer videoPlayer;
 
     public static void main(String[] args) {
         // Opret en instans af WatchItUI-klassen med navnet "WatchIT".
@@ -40,7 +39,9 @@ public abstract class Main {
 
     // Denne metode afspiller et bestemt medie.
     public static void play(Media media, Playable playable) {
-        playable.play();
+        if (videoPlayer != null) videoPlayer.dispose();
+
+        videoPlayer = new VideoPlayer(media, playable);
     }
 
     // Denne Metoden returnerer en liste af medier, der opfylder filtreringskriterierne.

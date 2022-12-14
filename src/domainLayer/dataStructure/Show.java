@@ -40,8 +40,8 @@ public class Show extends Media {
 
     public Season getSeason(int number) {
         if (0 < number && number <= seasons.length){
-            return seasons[number];
+            return seasons[number-1];
         }
-        return new Season(0, new Episode[]{});
+        return null;
     }
 }

@@ -12,7 +12,7 @@ public class Movie extends Media implements Playable {
     }
 
     @Override
-    public void play() {
-        System.out.println("PLAYING: " + getTitle());
+    public String getPath() {
+        return getTitle() + ".mp4";
     }
 }

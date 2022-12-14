@@ -61,7 +61,7 @@ public class DataHandlerImpl implements DataHandler {
 
     //jeg har virkelig lyst til at hardcode den her fordi den kunne meget let slette alle vores filmdata
     public void addFromFile(String newLine) throws FavoriteAddRemoveException, IOException {
-        if (!writePermission) throw new IOException("No write permission");
+        if (!writePermission) throw new IOException("Fil overskrivning ikke tillad af DataHandler.");
 
 
         //her laver vi den fil som bliver til "favorit.txt" filen
@@ -71,24 +71,22 @@ public class DataHandlerImpl implements DataHandler {
 
         //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen kaster vi en exception
         ArrayList<String> lines = new ArrayList<>();
-        try {
-            Scanner s = new Scanner(dataFile);
-            while (s.hasNext()) {
-                String line = s.nextLine();
 
-                if (newLine.equals(line)) {
-                    throw new FavoriteAddRemoveException("The data already exists in File", newLine);
-                }
-                lines.add(line);
+        Scanner s = new Scanner(dataFile);
+        while (s.hasNext()) {
+            String line = s.nextLine();
+
+            if (newLine.equals(line)) {
+                throw new FavoriteAddRemoveException("Dataen er allerede i filen:\n", newLine);
             }
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException();
+            lines.add(line);
         }
+
 
         //initialiserer vores writer for at kunne skrive til filen
         PrintWriter pw = new PrintWriter(dataFile);
 
-        for (String line : lines){
+        for (String line : lines) {
             pw.println(line);
         }
         pw.println(newLine);
@@ -97,37 +95,35 @@ public class DataHandlerImpl implements DataHandler {
     }
 
     public void removeFromFile(String newLine) throws FavoriteAddRemoveException, IOException {
-        if (!writePermission) throw new IOException("No write permission");
+        if (!writePermission) throw new IOException("Fil overskrivning ikke tillad af DataHandler.");
 
         //her laver vi den fil som bliver til "favorit.txt" filen
         File dataFile = new File(filePath);
         //hvis der ikke existerer en favorites fil laver vi den
-        if (!dataFile.exists()) throw new IOException("Fil not found");
+        if (!dataFile.exists()) throw new IOException("Fil ikke fundet: " + filePath);
 
         //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen kaster vi en exception
         ArrayList<String> lines = new ArrayList<>();
         boolean lineFound = false;
-        try {
-            Scanner s = new Scanner(dataFile);
-            while (s.hasNext()) {
-                String line = s.nextLine();
 
-                if (!newLine.equals(line)) {
-                    lines.add(line);
-                    lineFound = true;
-                }
+        Scanner s = new Scanner(dataFile);
+        while (s.hasNext()) {
+            String line = s.nextLine();
+
+            if (!newLine.equals(line)) {
+                lines.add(line);
+                lineFound = true;
             }
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException();
         }
+
         if (!lineFound) {
-            throw new FavoriteAddRemoveException("line not found", newLine);
+            throw new FavoriteAddRemoveException("Dataen ikke fundet i filen:\n", newLine);
         }
 
         //initialiserer vores writer for at kunne skrive til filen
         PrintWriter pw = new PrintWriter(dataFile);
 
-        for (String line : lines){
+        for (String line : lines) {
             pw.println(line);
         }
 

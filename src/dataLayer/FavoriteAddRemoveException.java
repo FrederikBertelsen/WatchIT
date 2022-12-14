@@ -2,10 +2,11 @@ package dataLayer;
 
 public class FavoriteAddRemoveException extends Exception{
     private String mediaTitle;
-    FavoriteAddRemoveException(String existenceStatement, String mediaTitle){
-        super(mediaTitle + " " + existenceStatement);
+    FavoriteAddRemoveException(String exceptionMessage, String mediaTitle){
+        super(exceptionMessage + "\n" + mediaTitle);
         this.mediaTitle = mediaTitle;
     }
+
 
     String getMediatitle(){
         return mediaTitle;
