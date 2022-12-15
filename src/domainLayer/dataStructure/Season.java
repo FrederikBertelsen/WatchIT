@@ -18,7 +18,7 @@ public class Season {
         if (0 < number && number <= episodes.length){
             return episodes[number-1];
         }
-        return new Episode(0,0);
+        return null;
     }
 
 }

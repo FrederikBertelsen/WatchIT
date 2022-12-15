@@ -8,9 +8,6 @@ public class Episode implements Playable{
         this.seasonNumber = seasonNumber;
         this.episodeNumber = episodeNumber;
     }
-    public int getEpisodeNumber(){
-        return episodeNumber;
-    }
     @Override
     public String getPath() {
         return "Season " + seasonNumber + "/Episode " + episodeNumber + ".mp4";

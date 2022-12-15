@@ -170,7 +170,7 @@ public class DataBaseImpl implements DataBase {
                 Episode[] episodes = new Episode[episodeCount];
                 // opret et Episode-object med episode nummer, og indsæt Episode-Objektet i sæsonens episode-array
                 for (int k = 0; k < episodeCount; k++) {
-                    Episode newEpisode = new Episode(seasonNumber, i);
+                    Episode newEpisode = new Episode(seasonNumber, k+1);
                     episodes[k] = newEpisode;
                 }
                 // Opret et nyt Season-objekt med sæson nummer og episode-array
