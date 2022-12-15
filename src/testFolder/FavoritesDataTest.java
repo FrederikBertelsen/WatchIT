@@ -22,8 +22,9 @@ public class FavoritesDataTest {
     String filePath;
     @BeforeEach
     public void setUp(){
+        correctTestPath = true;
         filePath = "data/favorites.txt";
-        dataHandler = new DataHandlerImpl(filePath);
+        dataHandler = new DataHandlerImpl(filePath, true);
         try {
             data = dataHandler.loadData();
         } catch (FileNotFoundException e){
@@ -40,20 +41,27 @@ public class FavoritesDataTest {
     @Test
     public void saveFavoriteAddToEmptyTest(){
         File file = new File(filePath);
-        file.delete();
+        if (file.exists() && !file.delete()){
+            correctTestPath = false;
+        }
         try {
             dataHandler.addToFile("Rear Window");
             data = dataHandler.loadData();
-        } catch (IOException | FavoriteAddRemoveException e){
+        } catch (IOException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
+        } catch (FavoriteAddRemoveException e){
+            System.out.println(e.getMessage());
+            correctTestPath = false;
         }
-        assertEquals(data.get(0),"Rear Window");
         try{
+            //tester om der er flere elementer end det nyligt tilføjgede i filen
             data.get(1);
             correctTestPath = false;
         }catch (IndexOutOfBoundsException e) {
-            correctTestPath = true;
+            //dette er den korrekte path
         }
+        assertEquals(data.get(0),"Rear Window");
         assertTrue(correctTestPath);
     }
 
@@ -61,24 +69,46 @@ public class FavoritesDataTest {
     public void saveFavoriteAddToExistingTest() {
         if(!new File(filePath).exists()) System.out.println("no existing file so save to existing doesn't really work");
         try {
+
             dataHandler.addToFile("The Maltese Falcon");
             dataHandler.addToFile("Homeland");
-        } catch (IOException e){}
+        } catch (IOException e){
+            correctTestPath = false;
+        }
+
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
+        assertTrue(correctTestPath);
     }
 
     @Test
     public void saveFavoriteRemoveTest(){
-
         try {
             dataHandler.addToFile("Twin peaks");
-            dataHandler.removeFromFile("Twin peaks");
-            dataHandler.removeFromFile("Rear Window");
-        } catch (IOException e){}
-        catch (FavoriteAddRemoveException e){
+        } catch (IOException e){
+            correctTestPath = false;
+        } catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
+        try {
+            dataHandler.removeFromFile("Twin peaks");
+        } catch (IOException e){
+            correctTestPath = false;
+        } catch (FavoriteAddRemoveException e){
+            System.out.println(e.getMessage());
+            correctTestPath = false;
+        }
+        try {
+            dataHandler.removeFromFile("NonExistent title");
+            correctTestPath = false;
+        } catch (IOException e){
+            correctTestPath = false;
+        } catch (FavoriteAddRemoveException e){
+            //rigtige path i testen
+        }
+        assertTrue(correctTestPath);
     }
 }

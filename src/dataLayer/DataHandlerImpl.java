@@ -99,10 +99,9 @@ public class DataHandlerImpl implements DataHandler {
 
         //her laver vi den fil som bliver til "favorit.txt" filen
         File dataFile = new File(filePath);
-        //hvis der ikke existerer en favorites fil laver vi den
         if (!dataFile.exists()) throw new IOException("Fil ikke fundet: " + filePath);
 
-        //tjekker igennem alle medier allerede på favorites listen og hvis mediet er der i forvejen kaster vi en exception
+        //tjekker igennem alle medier allerede på favorites listen og hvis mediet ikke er der i forvejen kaster vi en exception
         ArrayList<String> lines = new ArrayList<>();
         boolean lineFound = false;
 
@@ -110,9 +109,11 @@ public class DataHandlerImpl implements DataHandler {
         while (s.hasNext()) {
             String line = s.nextLine();
 
-            if (!newLine.equals(line)) {
-                lines.add(line);
+            if (newLine.equals(line)) {
                 lineFound = true;
+            }
+            else{
+                lines.add(line);
             }
         }
 
