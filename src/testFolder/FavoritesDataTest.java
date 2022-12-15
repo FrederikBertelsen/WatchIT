@@ -42,12 +42,9 @@ public class FavoritesDataTest {
         File file = new File(filePath);
         file.delete();
         try {
-            dataHandler.addFromFile("Rear Window");
+            dataHandler.addToFile("Rear Window");
             data = dataHandler.loadData();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        catch (FavoriteAddRemoveException e){
+        } catch (IOException | FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
         }
         assertEquals(data.get(0),"Rear Window");
@@ -64,8 +61,8 @@ public class FavoritesDataTest {
     public void saveFavoriteAddToExistingTest() {
         if(!new File(filePath).exists()) System.out.println("no existing file so save to existing doesn't really work");
         try {
-            dataHandler.addFromFile("The Maltese Falcon");
-            dataHandler.addFromFile("Homeland");
+            dataHandler.addToFile("The Maltese Falcon");
+            dataHandler.addToFile("Homeland");
         } catch (IOException e){}
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
@@ -76,7 +73,7 @@ public class FavoritesDataTest {
     public void saveFavoriteRemoveTest(){
 
         try {
-            dataHandler.addFromFile("Twin peaks");
+            dataHandler.addToFile("Twin peaks");
             dataHandler.removeFromFile("Twin peaks");
             dataHandler.removeFromFile("Rear Window");
         } catch (IOException e){}

@@ -9,10 +9,7 @@ import presentationLayer.DialogCreator;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.*;
 
 public class DataBaseImpl implements DataBase {
     // arrayet der indeholder alle film
@@ -60,7 +57,7 @@ public class DataBaseImpl implements DataBase {
 
         } catch (FileNotFoundException e) {
             // Fejlmeddelelse, hvis filen med data om film eller tv-serier ikke findes
-            DialogCreator.createExceptionDialog("Fejl ved indlæsning af film og serie filer: /n" + e.getMessage());
+            DialogCreator.createExceptionDialog("Fejl ved indlæsning af film og serie filer: \n" + e.getMessage());
             System.out.println();
         } catch (IOException e) {
             // Fejlmeddelelse, hvis der opstår en fejl ved indlæsning af billeder af filmplakater eller serieforsider
@@ -213,6 +210,7 @@ public class DataBaseImpl implements DataBase {
         // Hvis der er angivet en rating, så filtrer listen med media, så den kun indeholder media med den angivne rating eller højere
         if (!searchPreset.getRatingString().equals("")) {
             double ratingDouble = Double.parseDouble(searchPreset.getRatingString().substring(1));
+
             output = filterByRating(output, ratingDouble);
         }
         // Hvis der er angivet et årsinterval, så filtrer listen med medier, så den kun indeholder media fra det angivne årsinterval
@@ -220,6 +218,7 @@ public class DataBaseImpl implements DataBase {
             String[] yearParts = searchPreset.getYearsString().split("-");
             int yearFrom = Integer.parseInt(yearParts[0].strip());
             int yearTo = Integer.parseInt(yearParts[1].strip());
+
             output = filterByYear(output, yearFrom, yearTo);
         }
         // Hvis der er angivet et søgeord, så filtrer listen med media, så den kun indeholder media, hvor media-titlen matcher søgeordet tilpas nok (se StringMatcher klassen)
@@ -232,11 +231,7 @@ public class DataBaseImpl implements DataBase {
         else {
             // Hvis der er angivet en sorteringsmåde, så sorter listen med media efter den angivne måde
             if (!searchPreset.getSortBy().equals("")) {
-                switch (searchPreset.getSortBy()) {
-                    case "Titel" -> output.sort(Comparator.comparing(Media::getTitle));
-                    case "Rating" -> output.sort(Comparator.comparing(Media::getRating));
-                    case "Årstal" -> output.sort(Comparator.comparing(Media::getYear));
-                }
+                output = sortBy(output,searchPreset.getSortBy());
             }
 
             // Hvis der er angivet en sorteringsretning, så vend rækkefølgen af listen med media, hvis retningen er "faldende"
@@ -314,7 +309,7 @@ public class DataBaseImpl implements DataBase {
 
         // Hvis mediets udgivelse er inden for det angivne interval, skal det tilføjes til output-listen
         for (Media media : mediaList) {
-            if (yearStart <= media.getYear() && media.getYear() <= yearEnd) {
+            if (yearStart <= media.getReleaseYear() && media.getReleaseYear() <= yearEnd) {
                 output.add(media);
             }
         }
@@ -336,10 +331,19 @@ public class DataBaseImpl implements DataBase {
     }
 
     @Override
+    public ArrayList<Media> sortBy(ArrayList<Media> mediaList, String sortby){
+        switch (sortby) {
+            case "Titel" -> mediaList.sort(Comparator.comparing(Media::getTitle));
+            case "Rating" -> mediaList.sort(Comparator.comparing(Media::getRating));
+            case "Årstal" -> mediaList.sort(Comparator.comparing(Media::getReleaseYear));
+        }
+        return mediaList;
+    }
+    @Override
     public void addToFavorites(Media media) {
         media.setFavorite(true);
         try {
-            favoritesDataHandler.addFromFile(media.getTitle());
+            favoritesDataHandler.addToFile(media.getTitle());
         } catch (FavoriteAddRemoveException | IOException e) {
             DialogCreator.createWarningDialog(e.getMessage());
         }

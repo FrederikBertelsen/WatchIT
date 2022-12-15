@@ -15,7 +15,7 @@ public interface DataHandler {
     Dette er nødvendigt for at den kan opdatere txt filen eller oprette den hvis den ikke existerer endnu.
     Dette burde ikke ske medmindre brugeren har den lokation låst på en måde hvor den ikke kan slettes da metoden også forsøger dette
      */
-    void addFromFile(String data) throws FavoriteAddRemoveException,IOException;
+    void addToFile(String data) throws FavoriteAddRemoveException,IOException;
 
     void removeFromFile(String data) throws FavoriteAddRemoveException, IOException;
 

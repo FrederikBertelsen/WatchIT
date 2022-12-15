@@ -63,7 +63,7 @@ public class WatchItUI {
         menuBar.add(sortByDirectionDropDown);
 
         // search only favorites
-        favoritesOnly = new JCheckBox("Kun favorit");
+        favoritesOnly = new JCheckBox("Kun favoritter");
         menuBar.add(favoritesOnly);
 
         // reset button

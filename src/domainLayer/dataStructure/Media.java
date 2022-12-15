@@ -36,7 +36,7 @@ public abstract class Media {
         return genres;
     }
 
-    public int getYear() {
+    public int getReleaseYear() {
         return releaseYear;
     }
     public String getYearString() {

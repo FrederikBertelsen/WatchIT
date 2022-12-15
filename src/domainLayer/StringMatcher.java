@@ -8,7 +8,7 @@ public class StringMatcher {
 
     // Beregner minimumsscoren for en given søgeterm
     private static double calcMinimumScore(String searchTerm) {
-        return 1.0 * searchTerm.length() / 1.2;
+        return 1.2 * searchTerm.length();
     }
 
 
@@ -37,9 +37,9 @@ public class StringMatcher {
 
             // Tilføjer mediet til listen, hvis scoren er større eller lig med minimumsscoren
             if (score >= minimumScore) {
-                System.out.println(minimumScore);
-                System.out.println(mediaName);
-                System.out.println(score);
+                System.out.println("'" + mediaName + "'");
+                System.out.print(score);
+                System.out.println();
                 matchedMediaList.add(new MediaScore(media, score));
             }
         }
@@ -51,7 +51,8 @@ public class StringMatcher {
         ArrayList<Media> output = new ArrayList<>();
 
         // Gennemgår alle matchende medier og tilføjer dem til output-listen
-        for (MediaScore mediaScore : matchedMediaList) {
+        for (int i = matchedMediaList.size()-1; i >= 0; i--) {
+            MediaScore mediaScore = matchedMediaList.get(i);
             output.add(mediaScore.getMedia());
         }
 

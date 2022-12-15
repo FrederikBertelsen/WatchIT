@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
      // Denne metode opdaterer GalleryPanel-objekterne i den nuværende array baseret på de givne mediefiler
      public void updatePanels(ArrayList<Media> mediaList){
+         setVisible(false);
          // Kald resetCurrentPanels-metoden med antallet af mediefiler som argument
          clearCurrentPanels(mediaList.size());
 
@@ -37,6 +38,7 @@ import java.util.ArrayList;
              // Tilføj GalleryPanel-objektet til galleriet
              add(newGalleryPanel);
          }
+         setVisible(true);
      }
      // denne metode fjerner alle de GalleryPanel-objekter der er i arrayet,
      // og sætter arrayets længde til den nye mængde af medier der skal være i brugergrænsefladen.

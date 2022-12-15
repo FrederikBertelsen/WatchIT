@@ -5,12 +5,13 @@ import java.util.*;
 import dataLayer.DataHandlerImpl;
 import domainLayer.DataBase;
 import domainLayer.DataBaseImpl;
+import domainLayer.SearchPreset;
+import domainLayer.dataStructure.Media;
 import domainLayer.dataStructure.Movie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class domainLayerTest {
     private DataBase dataBase;
@@ -49,10 +50,39 @@ public class domainLayerTest {
             Movie currentMovie = movies[i];
 
             assertEquals(parts[0], currentMovie.getTitle());
-            assertEquals(Integer.parseInt(parts[1]), currentMovie.getYear());
+            assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
             assertEquals(new HashSet<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
             assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
         }
+    }
+
+    @Test
+    public void movieFilteringTest() {
+        HashSet<String> types = new HashSet<>();
+        types.add("Film");
+
+        HashSet<String> genres = new HashSet<>();
+        genres.add("Action");
+        genres.add("Drama");
+
+        String rating = "> 5.0";
+        String years = "1940-1998";
+        String sortBy = "Rating";
+        String sortByDirection = "Faldende";
+        String searchTerm = "";
+        boolean favoritesOnly = false;
+
+        SearchPreset searchPreset = new SearchPreset(types, genres, rating, years, sortBy, sortByDirection, searchTerm, favoritesOnly);
+        ArrayList<Media> filteredMedia = dataBase.getFilteredMedia(searchPreset);
+
+        boolean error = false;
+        for (Media media : filteredMedia){
+            if (!(media instanceof Movie)) error = true;
+            if (!media.getGenres().contains("Action") || !media.getGenres().contains("Drama")) error = true;
+            if (media.getRating() < 5.0) error = true;
+            if (media.getReleaseYear() < 1940 || media.getReleaseYear() > 1998) error = true;
+        }
+        assertFalse(error);
     }
 }
 

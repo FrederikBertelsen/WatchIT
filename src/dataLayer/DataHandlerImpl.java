@@ -12,8 +12,8 @@ import java.util.Scanner;
 
 public class DataHandlerImpl implements DataHandler {
 
-    private final String filePath;
-    private final String imageFolderPath;
+    private String filePath;
+    private String imageFolderPath;
 
     private boolean writePermission;
 
@@ -60,7 +60,7 @@ public class DataHandlerImpl implements DataHandler {
 
 
     //jeg har virkelig lyst til at hardcode den her fordi den kunne meget let slette alle vores filmdata
-    public void addFromFile(String newLine) throws FavoriteAddRemoveException, IOException {
+    public void addToFile(String newLine) throws FavoriteAddRemoveException, IOException {
         if (!writePermission) throw new IOException("Fil overskrivning ikke tillad af DataHandler.");
 
 
