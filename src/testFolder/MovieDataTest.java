@@ -33,6 +33,7 @@ public class MovieDataTest {
 
     @AfterEach
     public void tearDown(){
+        assertTrue(correctTestPath);
         dataHandler = null;
         data = null;
         filePath = null;
@@ -45,6 +46,7 @@ public class MovieDataTest {
             data = dataHandler.loadData();
         }catch (FileNotFoundException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
         for(int i=0; i<100; i++) {
             try {
@@ -54,9 +56,7 @@ public class MovieDataTest {
                 System.out.println("Cannot find image nr." + i + "with name" + data.get(i).split(";")[0]);
                 correctTestPath = false;
             }
-
         }
-        assertTrue(correctTestPath);
     }
 
 
@@ -66,6 +66,7 @@ public class MovieDataTest {
             data = dataHandler.loadData();
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
         assertEquals(data.get(0),"The Godfather; 1972; Crime, Drama; 9,2; ");
         assertEquals(data.get(2),"Schindler's List; 1993; Biography, Drama, History; 8,9;");

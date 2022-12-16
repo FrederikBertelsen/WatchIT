@@ -1,20 +1,25 @@
 package testFolder;
-import java.io.IOException;
-import java.util.*;
 
+import dataLayer.DataHandler;
 import dataLayer.DataHandlerImpl;
 import domainLayer.DataBase;
 import domainLayer.DataBaseImpl;
 import domainLayer.SearchPreset;
 import domainLayer.dataStructure.Media;
 import domainLayer.dataStructure.Movie;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class domainLayerTest {
-    private DataBase dataBase;
+    DataBase dataBase;
 
     @BeforeEach
     public void setUp(){
@@ -23,7 +28,7 @@ public class domainLayerTest {
 
     @Test
     public void getTitleTest() throws IOException {
-        DataHandlerImpl movieDataHandler = new DataHandlerImpl("data/film.txt");
+        DataHandler movieDataHandler = new DataHandlerImpl("data/film.txt");
         ArrayList<String> load = movieDataHandler.loadData();
 
         dataBase.movieSerializer(load);
@@ -45,15 +50,22 @@ public class domainLayerTest {
         dataBase.movieSerializer(moviesInputStrings);
         Movie[] movies = dataBase.getMovies();
 
-        for (int i = 0; i < movies.length; i++) {
-            String[] parts = moviesInputStrings.get(i).split("; ?");
-            Movie currentMovie = movies[i];
+        String[] parts = moviesInputStrings.get(0).split("; ?");
+        Movie currentMovie = movies[0];
 
-            assertEquals(parts[0], currentMovie.getTitle());
-            assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
-            assertEquals(new HashSet<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
-            assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
-        }
+        assertEquals(parts[0], currentMovie.getTitle());
+        assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
+        assertEquals(new HashSet<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
+        assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
+
+        parts = moviesInputStrings.get(1).split("; ?");
+        currentMovie = movies[15];
+
+        assertEquals(parts[0], currentMovie.getTitle());
+        assertEquals(Integer.parseInt(parts[1]), currentMovie.getReleaseYear());
+        assertEquals(new HashSet<>(Arrays.asList(parts[2].split(", "))), currentMovie.getGenres());
+        assertEquals(Double.parseDouble(parts[3].replace(",", ".")), currentMovie.getRating());
+
     }
 
     @Test

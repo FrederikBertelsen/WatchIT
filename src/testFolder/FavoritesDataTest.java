@@ -34,6 +34,7 @@ public class FavoritesDataTest {
 
     @AfterEach
     public void tearDown(){
+        assertTrue(correctTestPath);
         dataHandler = null;
         data = null;
     }
@@ -48,7 +49,6 @@ public class FavoritesDataTest {
             dataHandler.addToFile("Rear Window");
             data = dataHandler.loadData();
         } catch (IOException e){
-            System.out.println(e.getMessage());
             correctTestPath = false;
         } catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
@@ -59,28 +59,26 @@ public class FavoritesDataTest {
             data.get(1);
             correctTestPath = false;
         }catch (IndexOutOfBoundsException e) {
-            //dette er den korrekte path
+            //her skal exceptionen være kastet så dette er den korrekte path
         }
         assertEquals(data.get(0),"Rear Window");
-        assertTrue(correctTestPath);
     }
 
     @Test
     public void saveFavoriteAddToExistingTest() {
-        if(!new File(filePath).exists()) System.out.println("no existing file so save to existing doesn't really work");
+        if (!new File(filePath).exists()){
+            System.out.println("no existing file so save to existing doesn't really work");
+        }
         try {
-
             dataHandler.addToFile("The Maltese Falcon");
             dataHandler.addToFile("Homeland");
         } catch (IOException e){
             correctTestPath = false;
         }
-
         catch (FavoriteAddRemoveException e){
             System.out.println(e.getMessage());
             correctTestPath = false;
         }
-        assertTrue(correctTestPath);
     }
 
     @Test
@@ -107,8 +105,7 @@ public class FavoritesDataTest {
         } catch (IOException e){
             correctTestPath = false;
         } catch (FavoriteAddRemoveException e){
-            //rigtige path i testen
+            //her skal exceptionen være kastet så dette er den korrekte path
         }
-        assertTrue(correctTestPath);
     }
 }

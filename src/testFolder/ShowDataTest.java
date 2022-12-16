@@ -29,25 +29,28 @@ public class ShowDataTest {
 
     @AfterEach
     public void tearDown(){
+        assertTrue(correctTestPath);
         dataHandler = null;
         data = null;
         filePath = null;
     }
+    //Det kan på dette stadie ikke testes om det korrekte billide loades men vi tester at et blillede kan loades for alle titler
     @Test
     public  void getImageTest(){
         try {
             data = dataHandler.loadData();
         }catch (FileNotFoundException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
         for(int i=0; i<100; i++) {
             try {
                 BufferedImage img = dataHandler.getImage(((data.get(i)).split(";"))[0]);
             } catch(IOException e){
                 System.out.println("Cannot find image nr." + i + "with name" + data.get(i).split(";")[0]);
+                correctTestPath = false;
             }
         }
-        assertTrue(correctTestPath);
     }
 
 
@@ -57,11 +60,11 @@ public class ShowDataTest {
             data = dataHandler.loadData();
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
+            correctTestPath = false;
         }
         assertEquals(data.get(0),"Twin Peaks; 1990-1991; Crime, Drama, Mystery; 8,8; 1-8, 2-22;");
         assertEquals(data.get(37),"I Love Lucy; 1951-1957; Comedy, Family; 8,3; 1-35, 2-31, 3-31, 4-30, 5-26, 6-27;");
         assertEquals(data.get(69),"The Man In The High Castle; 2015- ; Drama, Sci-fi, Thriller; 8,1; 1-10, 2-10, 3-10;");
         assertEquals(data.get(96),"Person Of Interest; 2011-2016; Action, Crime, Drama; 8,4; 1-23, 2-22, 3-23, 4-22, 5-13;");
-
     }
 }
