@@ -47,7 +47,6 @@ public class domainLayerTest {
         moviesInputStrings.add("Forrest Gump; 1994; Drama, Romance; 8,8;");
 
         //dataBase = new DataBaseImpl();
-        dataBase.movieSerializer(moviesInputStrings);
         Movie[] movies = dataBase.getMovies();
 
         String[] parts = moviesInputStrings.get(0).split("; ?");
