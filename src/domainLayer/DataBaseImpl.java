@@ -44,7 +44,7 @@ public class DataBaseImpl implements DataBase {
         favoritesDataHandler = new DataHandlerImpl(favoritesPath, true);
 
         try {
-            // indlæser listen af favoriter i et HashSet, så favoritter hurtigt kan checkes
+            // indlæser listen af favoritter i et HashSet, så favoritter hurtigt kan checkes
             favoritesSet = new HashSet<>(favoritesDataHandler.loadData());
 
             // Indlæser data om film ved hjælp af movieDataHandler
